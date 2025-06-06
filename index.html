@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
@@ -69,14 +69,14 @@
             width: 0%;
         }
 
-        .learning-path {
+        .nav-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
             margin: 40px 0;
         }
 
-        .path-card {
+        .nav-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 30px;
@@ -87,195 +87,36 @@
             text-decoration: none;
             color: inherit;
             display: block;
+            text-align: center;
         }
 
-        .path-card:hover {
+        .nav-card:hover {
             transform: translateY(-10px) scale(1.02);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
             border-color: #74b9ff;
         }
 
-        .path-card.completed {
-            border-color: #00b894;
-            background: linear-gradient(135deg, #d4edda, #c3e6cb);
-        }
-
-        .path-card.current {
+        .nav-card.current {
             border-color: #fdcb6e;
             background: linear-gradient(135deg, #fff3cd, #ffeaa7);
         }
 
-        .card-icon {
+        .nav-icon {
             font-size: 4em;
-            text-align: center;
             margin-bottom: 20px;
         }
 
-        .card-title {
+        .nav-title {
             font-size: 2em;
             color: #2d3436;
             margin-bottom: 15px;
-            text-align: center;
             font-weight: bold;
         }
 
-        .card-description {
+        .nav-description {
             color: #636e72;
-            text-align: center;
-            margin-bottom: 20px;
             line-height: 1.5;
             font-size: 1.1em;
-        }
-
-        .card-stats {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-        }
-
-        .stat {
-            text-align: center;
-            flex: 1;
-        }
-
-        .stat-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #e17055;
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            color: #636e72;
-            font-weight: bold;
-        }
-
-        .difficulty-badge {
-            background: linear-gradient(45deg, #74b9ff, #0984e3);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: bold;
-            display: inline-block;
-            margin: 10px auto;
-        }
-
-        .start-btn {
-            background: linear-gradient(45deg, #00b894, #00cec9);
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            font-size: 16px;
-            margin-top: 15px;
-        }
-
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .start-btn:disabled {
-            background: #ddd;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .quick-access {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            margin: 30px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .quick-access h2 {
-            text-align: center;
-            color: #2d3436;
-            margin-bottom: 25px;
-            font-size: 2.2em;
-        }
-
-        .quick-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .quick-btn {
-            background: linear-gradient(45deg, #e91e63, #f06292);
-            border: none;
-            padding: 15px 25px;
-            border-radius: 25px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .quick-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .achievement-showcase {
-            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            margin: 30px 0;
-            text-align: center;
-        }
-
-        .achievement-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-        }
-
-        .achievement {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .achievement.earned {
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid #ffd700;
-        }
-
-        .achievement-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .celebration {
-            text-align: center;
-            font-size: 2em;
-            margin: 20px 0;
-            opacity: 0;
-            transition: all 0.5s ease;
-        }
-
-        .celebration.show {
-            opacity: 1;
-            animation: bounce 1s ease-in-out;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(-10px); }
         }
 
         @media (max-width: 768px) {
@@ -283,13 +124,8 @@
                 font-size: 2.5em;
             }
             
-            .learning-path {
+            .nav-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .quick-buttons {
-                flex-direction: column;
-                align-items: center;
             }
         }
     </style>
@@ -309,202 +145,59 @@
             </div>
         </div>
 
-        <div class="learning-path">
-            <a href="basics.html" class="path-card current" id="basics-card">
-                <div class="card-icon">🎯</div>
-                <div class="card-title">Chess Basics</div>
-                <div class="card-description">
+        <div class="nav-grid">
+            <a href="basics.html" class="nav-card current">
+                <div class="nav-icon">🎯</div>
+                <div class="nav-title">Chess Basics</div>
+                <div class="nav-description">
                     Discover what chess is, its amazing history, and why millions of people love this royal game!
                 </div>
-                <div class="card-stats">
-                    <div class="stat">
-                        <div class="stat-value">15</div>
-                        <div class="stat-label">Fun Facts</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">10</div>
-                        <div class="stat-label">Minutes</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">🌟</div>
-                        <div class="stat-label">Beginner</div>
-                    </div>
-                </div>
-                <div class="difficulty-badge">⭐ Easy Start</div>
-                <button class="start-btn">Begin Your Journey!</button>
             </a>
 
-            <a href="pieces.html" class="path-card" id="pieces-card">
-                <div class="card-icon">♟️</div>
-                <div class="card-title">Meet the Pieces</div>
-                <div class="card-description">
+            <a href="pieces.html" class="nav-card">
+                <div class="nav-icon">♟️</div>
+                <div class="nav-title">Meet the Pieces</div>
+                <div class="nav-description">
                     Get to know your royal army! Learn about each piece's personality, powers, and special abilities.
                 </div>
-                <div class="card-stats">
-                    <div class="stat">
-                        <div class="stat-value">6</div>
-                        <div class="stat-label">Pieces</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">15</div>
-                        <div class="stat-label">Minutes</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">🎭</div>
-                        <div class="stat-label">Interactive</div>
-                    </div>
-                </div>
-                <div class="difficulty-badge">⭐ Easy</div>
-                <button class="start-btn" disabled>Complete Basics First</button>
             </a>
 
-            <a href="board.html" class="path-card" id="board-card">
-                <div class="card-icon">🏁</div>
-                <div class="card-title">The Chessboard</div>
-                <div class="card-description">
-                    Explore your 64-square battlefield! Master coordinates, learn board secrets, and become a navigation expert.
+            <a href="board.html" class="nav-card">
+                <div class="nav-icon">🏁</div>
+                <div class="nav-title">The Chessboard</div>
+                <div class="nav-description">
+                    Explore your 64-square battlefield! Master coordinates and become a navigation expert.
                 </div>
-                <div class="card-stats">
-                    <div class="stat">
-                        <div class="stat-value">64</div>
-                        <div class="stat-label">Squares</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">12</div>
-                        <div class="stat-label">Minutes</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">🎯</div>
-                        <div class="stat-label">Practice</div>
-                    </div>
-                </div>
-                <div class="difficulty-badge">⭐ Easy</div>
-                <button class="start-btn" disabled>Complete Previous Steps</button>
             </a>
 
-            <a href="moves.html" class="path-card" id="moves-card">
-                <div class="card-icon">🚀</div>
-                <div class="card-title">How Pieces Move</div>
-                <div class="card-description">
-                    Master every movement! Learn how each piece travels across the board and discover special moves.
+            <a href="moves.html" class="nav-card">
+                <div class="nav-icon">🚀</div>
+                <div class="nav-title">How Pieces Move</div>
+                <div class="nav-description">
+                    Master every movement! Learn how each piece travels across the board.
                 </div>
-                <div class="card-stats">
-                    <div class="stat">
-                        <div class="stat-value">20+</div>
-                        <div class="stat-label">Moves</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">25</div>
-                        <div class="stat-label">Minutes</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">🎮</div>
-                        <div class="stat-label">Practice</div>
-                    </div>
-                </div>
-                <div class="difficulty-badge">⭐⭐ Medium</div>
-                <button class="start-btn" disabled>Complete Previous Steps</button>
             </a>
 
-            <a href="quiz.html" class="path-card" id="quiz-card">
-                <div class="card-icon">🧠</div>
-                <div class="card-title">Knowledge Quiz</div>
-                <div class="card-description">
-                    Test everything you've learned! Take fun quizzes and earn achievements to prove your chess mastery.
+            <a href="quiz.html" class="nav-card">
+                <div class="nav-icon">🧠</div>
+                <div class="nav-title">Knowledge Quiz</div>
+                <div class="nav-description">
+                    Test everything you've learned! Take fun quizzes and earn achievements.
                 </div>
-                <div class="card-stats">
-                    <div class="stat">
-                        <div class="stat-value">50+</div>
-                        <div class="stat-label">Questions</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">20</div>
-                        <div class="stat-label">Minutes</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">🏆</div>
-                        <div class="stat-label">Challenge</div>
-                    </div>
-                </div>
-                <div class="difficulty-badge">⭐⭐ Medium</div>
-                <button class="start-btn" disabled>Complete Learning First</button>
             </a>
 
-            <a href="games.html" class="path-card" id="games-card">
-                <div class="card-icon">🎮</div>
-                <div class="card-title">Mini Games</div>
-                <div class="card-description">
-                    Play fun chess games! Practice your skills with exciting challenges and interactive puzzles.
+            <a href="games.html" class="nav-card">
+                <div class="nav-icon">🎮</div>
+                <div class="nav-title">Mini Games</div>
+                <div class="nav-description">
+                    Play fun chess games! Practice your skills with exciting challenges.
                 </div>
-                <div class="card-stats">
-                    <div class="stat">
-                        <div class="stat-value">6+</div>
-                        <div class="stat-label">Games</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">∞</div>
-                        <div class="stat-label">Fun</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">🎪</div>
-                        <div class="stat-label">Exciting</div>
-                    </div>
-                </div>
-                <div class="difficulty-badge">⭐⭐⭐ All Levels</div>
-                <button class="start-btn">Play Anytime!</button>
             </a>
         </div>
-
-        <div class="quick-access">
-            <h2>🚀 Quick Access</h2>
-            <div class="quick-buttons">
-                <a href="games.html" class="quick-btn">🎮 Play Games</a>
-                <a href="quiz.html" class="quick-btn">🧠 Take Quiz</a>
-                <a href="board.html" class="quick-btn">🏁 Explore Board</a>
-                <a href="pieces.html" class="quick-btn">♟️ Meet Pieces</a>
-            </div>
-        </div>
-
-        <div class="achievement-showcase">
-            <h2>🏆 Your Chess Achievements</h2>
-            <div class="achievement-grid">
-                <div class="achievement" id="basics-achievement">
-                    <div class="achievement-icon">🎯</div>
-                    <div>Basics Scholar</div>
-                </div>
-                
-                <div class="achievement" id="pieces-achievement">
-                    <div class="achievement-icon">♟️</div>
-                    <div>Army Commander</div>
-                </div>
-                
-                <div class="achievement" id="board-achievement">
-                    <div class="achievement-icon">🏁</div>
-                    <div>Board Master</div>
-                </div>
-                
-                <div class="achievement" id="moves-achievement">
-                    <div class="achievement-icon">🚀</div>
-                    <div>Movement Expert</div>
-                </div>
-                
-                <div class="achievement" id="quiz-achievement">
-                    <div class="achievement-icon">🧠</div>
-                    <div>Knowledge King</div>
-                </div>
-                
-                <div class="achievement" id="games-achievement">
-                    <div class="achievement-icon">🎮</div>
-                    <div>Game Champion</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="celebration" id="celebration"></div>
     </div>
 
     <script>
-        // Progress tracking
+        // Simple progress tracking
         let completedSections = JSON.parse(localStorage.getItem('chessProgress') || '[]');
         
         function updateProgress() {
@@ -514,100 +207,11 @@
             
             document.getElementById('overallProgress').style.width = percentage + '%';
             document.getElementById('progressText').textContent = `Overall Mastery: ${percentage}%`;
-            
-            // Update cards based on progress
-            const sections = ['basics', 'pieces', 'board', 'moves', 'quiz', 'games'];
-            
-            sections.forEach((section, index) => {
-                const card = document.getElementById(`${section}-card`);
-                const button = card.querySelector('.start-btn');
-                const achievement = document.getElementById(`${section}-achievement`);
-                
-                if (completedSections.includes(section)) {
-                    card.classList.add('completed');
-                    if (section !== 'games') {
-                        button.textContent = '✅ Completed!';
-                        button.style.background = 'linear-gradient(45deg, #00b894, #00cec9)';
-                    }
-                    achievement.classList.add('earned');
-                } else if (index === 0 || completedSections.includes(sections[index - 1]) || section === 'games') {
-                    // Enable if first section, previous completed, or games (always available)
-                    card.classList.add('current');
-                    button.disabled = false;
-                    if (section !== 'games') {
-                        button.textContent = index === 0 ? 'Begin Your Journey!' : 'Continue Learning!';
-                    }
-                }
-            });
         }
         
-        // Mark section as completed (called from individual pages)
-        function markSectionComplete(section) {
-            if (!completedSections.includes(section)) {
-                completedSections.push(section);
-                localStorage.setItem('chessProgress', JSON.stringify(completedSections));
-                showCelebration(`🎉 ${section.charAt(0).toUpperCase() + section.slice(1)} completed! Great job!`);
-                updateProgress();
-            }
-        }
-        
-        // Check if returning from a completed section
-        const urlParams = new URLSearchParams(window.location.search);
-        const completed = urlParams.get('completed');
-        if (completed) {
-            markSectionComplete(completed);
-        }
-        
-        function showCelebration(message) {
-            const celebration = document.getElementById('celebration');
-            celebration.textContent = message;
-            celebration.classList.add('show');
-            
-            setTimeout(() => {
-                celebration.classList.remove('show');
-            }, 4000);
-        }
-        
-        // Initialize progress on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateProgress();
-            showCelebration('🏰 Welcome to Chess Kingdom! Your royal adventure awaits!');
-            
-            // Add confetti for completed achievements
-            if (completedSections.length > 0) {
-                setTimeout(() => {
-                    for (let i = 0; i < 20; i++) {
-                        createConfetti();
-                    }
-                }, 1000);
-            }
         });
-        
-        function createConfetti() {
-            const symbols = ['🎉', '🎊', '⭐', '🏆', '👑', '♟️', '♜', '♞', '♝', '♛', '♚'];
-            const confetti = document.createElement('div');
-            confetti.textContent = symbols[Math.floor(Math.random() * symbols.length)];
-            confetti.style.position = 'fixed';
-            confetti.style.fontSize = '25px';
-            confetti.style.left = Math.random() * window.innerWidth + 'px';
-            confetti.style.top = '-50px';
-            confetti.style.zIndex = '1000';
-            confetti.style.pointerEvents = 'none';
-            
-            document.body.appendChild(confetti);
-            
-            const animation = confetti.animate([
-                { transform: 'translateY(-50px) rotate(0deg)', opacity: 1 },
-                { transform: `translateY(${window.innerHeight + 50}px) rotate(360deg)`, opacity: 0 }
-            ], {
-                duration: 2000 + Math.random() * 1000,
-                easing: 'ease-out'
-            });
-            
-            animation.onfinish = () => {
-                confetti.remove();
-            };
-        }
     </script>
 </body>
 </html>
