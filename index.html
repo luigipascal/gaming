@@ -16,17 +16,17 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: #333;
+            padding: 20px;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             background: rgba(255, 255, 255, 0.95);
             padding: 40px;
             border-radius: 20px;
@@ -34,99 +34,57 @@
         }
 
         .header h1 {
-            font-size: 3.5em;
+            font-size: 3em;
             color: #4a5568;
             margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .header p {
-            font-size: 1.3em;
+            font-size: 1.2em;
             color: #666;
-            margin-bottom: 25px;
         }
 
-        .progress-overview {
-            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .progress-bar {
-            background: rgba(255, 255, 255, 0.5);
-            height: 25px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-
-        .progress-fill {
-            background: linear-gradient(90deg, #00b894, #00cec9);
-            height: 100%;
-            border-radius: 12px;
-            transition: width 0.8s ease;
-            width: 0%;
-        }
-
-        .nav-grid {
+        .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 30px;
             margin: 40px 0;
         }
 
         .nav-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 30px;
+            padding: 40px;
+            text-align: center;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s ease;
-            cursor: pointer;
-            border: 3px solid transparent;
+            transition: all 0.3s ease;
             text-decoration: none;
             color: inherit;
-            display: block;
-            text-align: center;
+            border: 3px solid transparent;
         }
 
         .nav-card:hover {
-            transform: translateY(-10px) scale(1.02);
+            transform: translateY(-10px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
             border-color: #74b9ff;
         }
 
-        .nav-card.current {
-            border-color: #fdcb6e;
-            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
-        }
-
-        .nav-icon {
+        .card-icon {
             font-size: 4em;
             margin-bottom: 20px;
         }
 
-        .nav-title {
+        .card-title {
             font-size: 2em;
             color: #2d3436;
             margin-bottom: 15px;
             font-weight: bold;
         }
 
-        .nav-description {
+        .card-description {
             color: #636e72;
             line-height: 1.5;
-            font-size: 1.1em;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5em;
-            }
-            
-            .nav-grid {
-                grid-template-columns: 1fr;
-            }
+            font-size: 1em;
         }
     </style>
 </head>
@@ -135,83 +93,57 @@
         <div class="header">
             <h1>🏰 Welcome to Chess Kingdom! 👑</h1>
             <p>Your magical journey to chess mastery starts here!</p>
-            
-            <div class="progress-overview">
-                <h3 style="color: #2d3436; margin-bottom: 10px;">🎯 Your Learning Progress</h3>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="overallProgress"></div>
-                </div>
-                <p style="color: #2d3436; font-weight: bold;" id="progressText">Overall Mastery: 0%</p>
-            </div>
         </div>
 
-        <div class="nav-grid">
-            <a href="basics.html" class="nav-card current">
-                <div class="nav-icon">🎯</div>
-                <div class="nav-title">Chess Basics</div>
-                <div class="nav-description">
+        <div class="cards-grid">
+            <a href="basics.html" class="nav-card">
+                <div class="card-icon">🎯</div>
+                <div class="card-title">Chess Basics</div>
+                <div class="card-description">
                     Discover what chess is, its amazing history, and why millions of people love this royal game!
                 </div>
             </a>
 
             <a href="pieces.html" class="nav-card">
-                <div class="nav-icon">♟️</div>
-                <div class="nav-title">Meet the Pieces</div>
-                <div class="nav-description">
+                <div class="card-icon">♟️</div>
+                <div class="card-title">Meet the Pieces</div>
+                <div class="card-description">
                     Get to know your royal army! Learn about each piece's personality, powers, and special abilities.
                 </div>
             </a>
 
             <a href="board.html" class="nav-card">
-                <div class="nav-icon">🏁</div>
-                <div class="nav-title">The Chessboard</div>
-                <div class="nav-description">
+                <div class="card-icon">🏁</div>
+                <div class="card-title">The Chessboard</div>
+                <div class="card-description">
                     Explore your 64-square battlefield! Master coordinates and become a navigation expert.
                 </div>
             </a>
 
             <a href="moves.html" class="nav-card">
-                <div class="nav-icon">🚀</div>
-                <div class="nav-title">How Pieces Move</div>
-                <div class="nav-description">
+                <div class="card-icon">🚀</div>
+                <div class="card-title">How Pieces Move</div>
+                <div class="card-description">
                     Master every movement! Learn how each piece travels across the board.
                 </div>
             </a>
 
             <a href="quiz.html" class="nav-card">
-                <div class="nav-icon">🧠</div>
-                <div class="nav-title">Knowledge Quiz</div>
-                <div class="nav-description">
+                <div class="card-icon">🧠</div>
+                <div class="card-title">Knowledge Quiz</div>
+                <div class="card-description">
                     Test everything you've learned! Take fun quizzes and earn achievements.
                 </div>
             </a>
 
             <a href="games.html" class="nav-card">
-                <div class="nav-icon">🎮</div>
-                <div class="nav-title">Mini Games</div>
-                <div class="nav-description">
+                <div class="card-icon">🎮</div>
+                <div class="card-title">Mini Games</div>
+                <div class="card-description">
                     Play fun chess games! Practice your skills with exciting challenges.
                 </div>
             </a>
         </div>
     </div>
-
-    <script>
-        // Simple progress tracking
-        let completedSections = JSON.parse(localStorage.getItem('chessProgress') || '[]');
-        
-        function updateProgress() {
-            const totalSections = 6;
-            const completed = completedSections.length;
-            const percentage = Math.round((completed / totalSections) * 100);
-            
-            document.getElementById('overallProgress').style.width = percentage + '%';
-            document.getElementById('progressText').textContent = `Overall Mastery: ${percentage}%`;
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            updateProgress();
-        });
-    </script>
 </body>
 </html>
