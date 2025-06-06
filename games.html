@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Chess Mini Games - Play & Learn!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #4a5568;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border-color: #74b9ff;
+        }
+
+        .game-card.active {
+            border-color: #00b894;
+            background: linear-gradient(135deg, #fff, #e8f5e8);
+        }
+
+        .game-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            font-size: 1.8em;
+            color: #2d3436;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .game-description {
+            color: #636e72;
+            text-align: center;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .difficulty-badge {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px auto;
+        }
+
+        .play-btn {
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 25px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .game-container.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #2d3436;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 1.2em;
+            color: #e17055;
+            font-weight: bold;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            gap: 2px;
+            margin: 20px auto;
+            background: #8b4513;
+            padding: 10px;
+            border-radius: 10px;
+            justify-content: center;
+        }
+
+        .game-square {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .game-square.white {
+            background: #f0d9b5;
+        }
+
+        .game-square.black {
+            background: #b58863;
+        }
+
+        .game-square:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-square.highlight {
+            background: #ffeb3b !important;
+            animation: pulse 1s infinite;
+        }
+
+        .game-square.target {
+            background: #4caf50 !important;
+        }
+
+        .game-square.danger {
+            background: #f44336 !important;
+        }
+
+        .game-square.path {
+            background: #2196f3 !important;
+        }
+
+        .game-square.selected {
+            border: 4px solid #ff6b6b;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(45deg, #e91e63, #f06292);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:disabled {
+            background: #ddd;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .puzzle-setup {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .puzzle-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .puzzle-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .puzzle-card.completed {
+            background: rgba(76, 175, 80, 0.3);
+            border: 2px solid #4caf50;
+        }
+
+        .timer-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e17055;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            border: 2px solid #28a745;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .leaderboard {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            margin: 25px 0;
+        }
+
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin: 8px 0;
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .achievement-popup.show {
+            display: block;
+            animation: achievementPop 0.6s ease-out;
+        }
+
+        @keyframes achievementPop {
+            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        .celebration {
+            text-align: center;
+            font-size: 2em;
+            margin: 20px 0;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .celebration.show {
+            opacity: 1;
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .game-board {
+                grid-template-columns: repeat(8, 45px);
+                grid-template-rows: repeat(8, 45px);
+            }
+            
+            .game-square {
+                width: 45px;
+                height: 45px;
+                font-size: 24px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="back-btn" onclick="goBack()">⬅️ Back to Chess Kingdom</button>
+        
+        <div class="header">
+            <h1>🎮 Chess Mini Games!</h1>
+            <p style="font-size: 1.2em; color: #666;">Play fun games and sharpen your chess skills!</p>
+        </div>
+
+        <div class="games-grid" id="gamesGrid">
+            <div class="game-card" onclick="selectGame('piece-placement')">
+                <div class="game-icon">🏰</div>
+                <div class="game-title">Piece Placement</div>
+                <div class="game-description">Set up the chess pieces in their starting positions as fast as you can!</div>
+                <div class="difficulty-badge">⭐ Easy</div>
+                <button class="play-btn">Play Now!</button>
+            </div>
+
+            <div class="game-card" onclick="selectGame('knight-tour')">
+                <div class="game-icon">♞</div>
+                <div class="game-title">Knight's Adventure</div>
+                <div class="game-description">Guide your knight to visit every square on the board!</div>
+                <div class="difficulty-badge">⭐⭐⭐ Hard</div>
+                <button class="play-btn">Play Now!</button>
+            </div>
+
+            <div class="game-card" onclick="selectGame('capture-race')">
+                <div class="game-icon">⚔️</div>
+                <div class="game-title">Capture Race</div>
+                <div class="game-description">Capture all enemy pieces as quickly as possible!</div>
+                <div class="difficulty-badge">⭐⭐ Medium</div>
+                <button class="play-btn">Play Now!</button>
+            </div>
+
+            <div class="game-card" onclick="selectGame('checkmate-puzzle')">
+                <div class="game-icon">👑</div>
+                <div class="game-title">Checkmate Puzzles</div>
+                <div class="game-description">Find the winning move that delivers checkmate!</div>
+                <div class="difficulty-badge">⭐⭐⭐ Hard</div>
+                <button class="play-btn">Play Now!</button>
+            </div>
+
+            <div class="game-card" onclick="selectGame('pawn-race')">
+                <div class="game-icon">🏃‍♂️</div>
+                <div class="game-title">Pawn Promotion Race</div>
+                <div class="game-description">Race your pawns to the end to become queens!</div>
+                <div class="difficulty-badge">⭐ Easy</div>
+                <button class="play-btn">Play Now!</button>
+            </div>
+
+            <div class="game-card" onclick="selectGame('memory-match')">
+                <div class="game-icon">🧠</div>
+                <div class="game-title">Chess Memory</div>
+                <div class="game-description">Match pairs of chess pieces to test your memory!</div>
+                <div class="difficulty-badge">⭐⭐ Medium</div>
+                <button class="play-btn">Play Now!</button>
+            </div>
+        </div>
+
+        <!-- Game Container -->
+        <div class="game-container" id="gameContainer">
+            <div class="game-header">
+                <div>
+                    <h2 id="currentGameTitle">🏰 Piece Placement</h2>
+                    <button class="control-btn" onclick="backToMenu()">🏠 Back to Games</button>
+                </div>
+                <div class="game-stats">
+                    <div class="stat">
+                        <div class="stat-label">Score</div>
+                        <div class="stat-value" id="scoreDisplay">0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Time</div>
+                        <div class="stat-value" id="timerDisplay">00:00</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-label">Moves</div>
+                        <div class="stat-value" id="movesDisplay">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="instructions" id="gameInstructions">
+                <h3>🎯 How to Play</h3>
+                <p>Click on pieces to place them in their correct starting positions!</p>
+            </div>
+
+            <div class="game-board" id="gameBoard">
+                <!-- Board will be generated by JavaScript -->
+            </div>
+
+            <div class="game-controls">
+                <button class="control-btn" onclick="resetGame()" id="resetBtn">🔄 Reset</button>
+                <button class="control-btn" onclick="giveHint()" id="hintBtn">💡 Hint</button>
+                <button class="control-btn" onclick="autoSolve()" id="solveBtn">🤖 Auto Solve</button>
+                <button class="control-btn" onclick="nextLevel()" id="nextBtn" style="display: none;">➡️ Next Level</button>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                🎉 Congratulations! You completed the challenge!
+            </div>
+        </div>
+
+        <!-- Puzzle Setup Section -->
+        <div class="puzzle-setup" id="puzzleSetup" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 20px;">🧩 Choose Your Challenge</h2>
+            <div class="puzzle-grid" id="puzzleGrid">
+                <!-- Puzzles will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard" id="leaderboard" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 20px;">🏆 High Scores</h2>
+            <div id="leaderboardList">
+                <div class="leaderboard-entry">
+                    <span>🥇 Speed Master</span>
+                    <span>12.5s</span>
+                </div>
+                <div class="leaderboard-entry">
+                    <span>🥈 Quick Learner</span>
+                    <span>15.2s</span>
+                </div>
+                <div class="leaderboard-entry">
+                    <span>🥉 Chess Explorer</span>
+                    <span>18.7s</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievement Popup -->
+        <div class="achievement-popup" id="achievementPopup">
+            <div style="font-size: 3em; margin-bottom: 15px;">🏆</div>
+            <h2 id="achievementTitle">Achievement Unlocked!</h2>
+            <p id="achievementDescription">You've mastered piece placement!</p>
+            <button class="control-btn" onclick="closeAchievement()" style="margin-top: 15px;">✅ Awesome!</button>
+        </div>
+
+        <div class="celebration" id="celebration"></div>
+    </div>
+
+    <script>
+        let currentGame = null;
+        let gameState = {};
+        let timer = null;
+        let startTime = null;
+        let gameStats = {
+            score: 0,
+            time: 0,
+            moves: 0
+        };
+
+        const games = {
+            'piece-placement': {
+                title: '🏰 Piece Placement',
+                instructions: 'Click on pieces to place them in their correct starting positions!',
+                setup: setupPiecePlacement,
+                reset: resetPiecePlacement
+            },
+            'knight-tour': {
+                title: '♞ Knight\'s Adventure',
+                instructions: 'Move your knight to visit every square exactly once!',
+                setup: setupKnightTour,
+                reset: resetKnightTour
+            },
+            'capture-race': {
+                title: '⚔️ Capture Race',
+                instructions: 'Capture all enemy pieces as quickly as possible!',
+                setup: setupCaptureRace,
+                reset: resetCaptureRace
+            },
+            'checkmate-puzzle': {
+                title: '👑 Checkmate Puzzles',
+                instructions: 'Find the move that delivers checkmate in one!',
+                setup: setupCheckmatePuzzle,
+                reset: resetCheckmatePuzzle
+            },
+            'pawn-race': {
+                title: '🏃‍♂️ Pawn Promotion Race',
+                instructions: 'Race your pawns to the end to promote them!',
+                setup: setupPawnRace,
+                reset: resetPawnRace
+            },
+            'memory-match': {
+                title: '🧠 Chess Memory',
+                instructions: 'Match pairs of chess pieces!',
+                setup: setupMemoryMatch,
+                reset: resetMemoryMatch
+            }
+        };
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function selectGame(gameId) {
+            currentGame = gameId;
+            
+            // Hide games grid and show game container
+            document.getElementById('gamesGrid').style.display = 'none';
+            document.getElementById('gameContainer').classList.add('active');
+            
+            // Update game info
+            const game = games[gameId];
+            document.getElementById('currentGameTitle').textContent = game.title;
+            document.getElementById('gameInstructions').innerHTML = `
+                <h3>🎯 How to Play</h3>
+                <p>${game.instructions}</p>
+            `;
+            
+            // Setup the specific game
+            game.setup();
+            
+            // Start timer
+            startTimer();
+            
+            showCelebration(`🎮 ${game.title} started! Have fun!`);
+        }
+
+        function backToMenu() {
+            stopTimer();
+            
+            document.getElementById('gameContainer').classList.remove('active');
+            document.getElementById('gamesGrid').style.display = 'grid';
+            document.getElementById('puzzleSetup').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
+            
+            currentGame = null;
+            resetGameStats();
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            timer = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                gameStats.time = elapsed;
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        function resetGameStats() {
+            gameStats = { score: 0, time: 0, moves: 0 };
+            updateStatsDisplay();
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById('scoreDisplay').textContent = gameStats.score;
+            document.getElementById('movesDisplay').textContent = gameStats.moves;
+        }
+
+        function createGameBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+            
+            for (let row = 7; row >= 0; row--) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = `game-square ${(row + col) % 2 === 0 ? 'black' : 'white'}`;
+                    square.dataset.row = row;
+                    square.dataset.col = col;
+                    square.dataset.square = String.fromCharCode(97 + col) + (row + 1);
+                    board.appendChild(square);
+                }
+            }
+            
+            return board;
+        }
+
+        // Piece Placement Game
+        function setupPiecePlacement() {
+            createGameBoard();
+            gameState = {
+                correctPositions: {
+                    'a1': '♜', 'b1': '♞', 'c1': '♝', 'd1': '♛', 'e1': '♚', 'f1': '♝', 'g1': '♞', 'h1': '♜'
+                },
+                placedPieces: {},
+                availablePieces: ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜']
+            };
+            
+            // Add click handlers for back rank squares
+            document.querySelectorAll('.game-square').forEach(square => {
+                if (square.dataset.row === '0') {
+                    square.onclick = () => placePiece(square);
+                }
+            });
+            
+            resetGameStats();
+        }
+
+        function placePiece(square) {
+            if (gameState.availablePieces.length === 0) return;
+            
+            const piece = gameState.availablePieces.shift();
+            square.textContent = piece;
+            gameState.placedPieces[square.dataset.square] = piece;
+            
+            gameStats.moves++;
+            updateStatsDisplay();
+            
+            // Check if correct
+            if (gameState.correctPositions[square.dataset.square] === piece) {
+                square.classList.add('target');
+                gameStats.score += 10;
+            } else {
+                square.classList.add('danger');
+                gameStats.score = Math.max(0, gameStats.score - 5);
+            }
+            
+            updateStatsDisplay();
+            
+            // Check if complete
+            if (Object.keys(gameState.placedPieces).length === 8) {
+                checkPiecePlacementComplete();
+            }
+        }
+
+        function checkPiecePlacementComplete() {
+            let correct = 0;
+            
+            Object.keys(gameState.correctPositions).forEach(square => {
+                if (gameState.placedPieces[square] === gameState.correctPositions[square]) {
+                    correct++;
+                }
+            });
+            
+            if (correct === 8) {
+                stopTimer();
+                showSuccess('🎉 Perfect! All pieces placed correctly!');
+                showAchievement('Master Organizer', 'You perfectly arranged all chess pieces!');
+            } else {
+                showCelebration(`${correct}/8 pieces correct! Keep trying!`);
+            }
+        }
+
+        function resetPiecePlacement() {
+            setupPiecePlacement();
+        }
+
+        // Knight's Tour Game
+        function setupKnightTour() {
+            createGameBoard();
+            gameState = {
+                knightPosition: { row: 0, col: 0 },
+                visitedSquares: new Set(),
+                moveCount: 0
+            };
+            
+            // Place knight on starting square
+            const startSquare = document.querySelector('[data-row="0"][data-col="0"]');
+            startSquare.textContent = '♞';
+            startSquare.classList.add('target');
+            gameState.visitedSquares.add('a1');
+            
+            // Add click handlers
+            document.querySelectorAll('.game-square').forEach(square => {
+                square.onclick = () => moveKnight(square);
+            });
+            
+            highlightValidKnightMoves();
+            resetGameStats();
+        }
+
+        function moveKnight(targetSquare) {
+            const targetRow = parseInt(targetSquare.dataset.row);
+            const targetCol = parseInt(targetSquare.dataset.col);
+            
+            if (!isValidKnightMove(gameState.knightPosition.row, gameState.knightPosition.col, targetRow, targetCol)) {
+                showCelebration('❌ Invalid knight move! Knights move in L-shape.');
+                return;
+            }
+            
+            // Remove knight from current position
+            const currentSquare = document.querySelector(`[data-row="${gameState.knightPosition.row}"][data-col="${gameState.knightPosition.col}"]`);
+            currentSquare.textContent = '✓';
+            currentSquare.classList.remove('target');
+            currentSquare.classList.add('path');
+            
+            // Place knight on new position
+            targetSquare.textContent = '♞';
+            targetSquare.classList.add('target');
+            gameState.knightPosition = { row: targetRow, col: targetCol };
+            gameState.visitedSquares.add(targetSquare.dataset.square);
+            gameState.moveCount++;
+            
+            gameStats.moves++;
+            gameStats.score = gameState.visitedSquares.size * 10;
+            updateStatsDisplay();
+            
+            // Clear previous highlights and show new valid moves
+            document.querySelectorAll('.game-square').forEach(sq => sq.classList.remove('highlight'));
+            highlightValidKnightMoves();
+            
+            // Check if tour complete
+            if (gameState.visitedSquares.size === 64) {
+                stopTimer();
+                showSuccess('🏆 Incredible! You completed the Knight\'s Tour!');
+                showAchievement('Knight Master', 'You visited all 64 squares with your knight!');
+            }
+        }
+
+        function isValidKnightMove(fromRow, fromCol, toRow, toCol) {
+            const rowDiff = Math.abs(toRow - fromRow);
+            const colDiff = Math.abs(toCol - fromCol);
+            return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2);
+        }
+
+        function highlightValidKnightMoves() {
+            const { row, col } = gameState.knightPosition;
+            const knightMoves = [
+                [-2, -1], [-2, 1], [-1, -2], [-1, 2],
+                [1, -2], [1, 2], [2, -1], [2, 1]
+            ];
+            
+            knightMoves.forEach(([dr, dc]) => {
+                const newRow = row + dr;
+                const newCol = col + dc;
+                
+                if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                    const square = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`);
+                    const squareName = String.fromCharCode(97 + newCol) + (newRow + 1);
+                    
+                    if (!gameState.visitedSquares.has(squareName)) {
+                        square.classList.add('highlight');
+                    }
+                }
+            });
+        }
+
+        function resetKnightTour() {
+            setupKnightTour();
+        }
+
+        // Capture Race Game
+        function setupCaptureRace() {
+            createGameBoard();
+            gameState = {
+                playerPieces: [],
+                enemyPieces: [],
+                selectedPiece: null,
+                captured: 0
+            };
+            
+            // Place player pieces
+            const playerPositions = [
+                {row: 0, col: 3, piece: '♛'}, // Queen
+                {row: 1, col: 4, piece: '♜'}, // Rook
+                {row: 2, col: 2, piece: '♝'}, // Bishop
+            ];
+            
+            // Place enemy pieces randomly
+            const enemyPositions = [
+                {row: 6, col: 1, piece: '♟'}, {row: 6, col: 5, piece: '♟'},
+                {row: 7, col: 0, piece: '♟'}, {row: 7, col: 7, piece: '♟'},
+                {row: 5, col: 3, piece: '♟'}
+            ];
+            
+            playerPositions.forEach(pos => {
+                const square = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+                square.textContent = pos.piece;
+                square.classList.add('target');
+                square.onclick = () => selectPiece(square, pos);
+            });
+            
+            enemyPositions.forEach(pos => {
+                const square = document.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+                square.textContent = pos.piece;
+                square.style.color = '#e74c3c';
+                square.classList.add('danger');
+                gameState.enemyPieces.push(pos);
+            });
+            
+            resetGameStats();
+        }
+
+        function selectPiece(square, pieceData) {
+            // Remove previous selection
+            document.querySelectorAll('.game-square').forEach(sq => sq.classList.remove('selected'));
+            
+            square.classList.add('selected');
+            gameState.selectedPiece = pieceData;
+            
+            // Highlight possible moves/captures
+            highlightCaptureMoves(pieceData);
+        }
+
+        function highlightCaptureMoves(piece) {
+            // Clear previous highlights
+            document.querySelectorAll('.game-square').forEach(sq => sq.classList.remove('highlight'));
+            
+            // Simple capture highlighting (enemy pieces only)
+            gameState.enemyPieces.forEach(enemy => {
+                const square = document.querySelector(`[data-row="${enemy.row}"][data-col="${enemy.col}"]`);
+                if (square && square.textContent) {
+                    square.classList.add('highlight');
+                    square.onclick = () => captureEnemy(square, enemy);
+                }
+            });
+        }
+
+        function captureEnemy(square, enemy) {
+            if (!gameState.selectedPiece) return;
+            
+            square.textContent = '';
+            square.style.color = '';
+            square.classList.remove('danger', 'highlight');
+            
+            gameState.captured++;
+            gameStats.score += 20;
+            gameStats.moves++;
+            updateStatsDisplay();
+            
+            // Remove from enemy pieces
+            gameState.enemyPieces = gameState.enemyPieces.filter(e => e !== enemy);
+            
+            showCelebration('⚔️ Enemy captured!');
+            
+            // Check if all captured
+            if (gameState.captured === 5) {
+                stopTimer();
+                showSuccess('🎉 All enemies captured! Victory!');
+                showAchievement('Battle Master', 'You captured all enemy pieces!');
+            }
+        }
+
+        function resetCaptureRace() {
+            setupCaptureRace();
+        }
+
+        // Memory Match Game
+        function setupMemoryMatch() {
+            const board = document.getElementById('gameBoard');
+            board.style.gridTemplateColumns = 'repeat(4, 80px)';
+            board.style.gridTemplateRows = 'repeat(4, 80px)';
+            board.innerHTML = '';
+            
+            const pieces = ['♟', '♜', '♞', '♝', '♛', '♚', '♟', '♜', '♞', '♝', '♛', '♚', '🎯', '🎯', '⭐', '⭐'];
+            const shuffled = pieces.sort(() => Math.random() - 0.5);
+            
+            gameState = {
+                cards: shuffled,
+                flipped: [],
+                matched: [],
+                moves: 0
+            };
+            
+            shuffled.forEach((piece, index) => {
+                const card = document.createElement('div');
+                card.className = 'game-square white';
+                card.style.fontSize = '36px';
+                card.textContent = '?';
+                card.dataset.index = index;
+                card.dataset.piece = piece;
+                card.onclick = () => flipCard(card, index);
+                board.appendChild(card);
+            });
+            
+            resetGameStats();
+        }
+
+        function flipCard(card, index) {
+            if (gameState.flipped.length === 2 || gameState.flipped.includes(index) || gameState.matched.includes(index)) {
+                return;
+            }
+            
+            card.textContent = card.dataset.piece;
+            gameState.flipped.push(index);
+            
+            if (gameState.flipped.length === 2) {
+                gameStats.moves++;
+                updateStatsDisplay();
+                
+                setTimeout(() => checkMemoryMatch(), 1000);
+            }
+        }
+
+        function checkMemoryMatch() {
+            const [first, second] = gameState.flipped;
+            const cards = document.querySelectorAll('.game-square');
+            
+            if (gameState.cards[first] === gameState.cards[second]) {
+                // Match found
+                gameState.matched.push(first, second);
+                cards[first].classList.add('target');
+                cards[second].classList.add('target');
+                gameStats.score += 10;
+                
+                showCelebration('🎉 Match found!');
+                
+                if (gameState.matched.length === 16) {
+                    stopTimer();
+                    showSuccess('🧠 Memory Master! All pairs matched!');
+                    showAchievement('Memory Champion', 'You matched all pairs perfectly!');
+                }
+            } else {
+                // No match
+                cards[first].textContent = '?';
+                cards[second].textContent = '?';
+            }
+            
+            gameState.flipped = [];
+            updateStatsDisplay();
+        }
+
+        function resetMemoryMatch() {
+            setupMemoryMatch();
+        }
+
+        // Placeholder functions for other games
+        function setupCheckmatePuzzle() {
+            createGameBoard();
+            showCelebration('🚧 Checkmate puzzles coming soon! Try other games for now!');
+        }
+
+        function resetCheckmatePuzzle() {
+            setupCheckmatePuzzle();
+        }
+
+        function setupPawnRace() {
+            createGameBoard();
+            showCelebration('🚧 Pawn race coming soon! Try other games for now!');
+        }
+
+        function resetPawnRace() {
+            setupPawnRace();
+        }
+
+        // Game controls
+        function resetGame() {
+            if (currentGame && games[currentGame].reset) {
+                games[currentGame].reset();
+                startTimer();
+            }
+        }
+
+        function giveHint() {
+            if (currentGame === 'piece-placement') {
+                // Highlight one correct position
+                const remaining = Object.keys(gameState.correctPositions).filter(
+                    square => !gameState.placedPieces[square]
+                );
+                
+                if (remaining.length > 0) {
+                    const hintSquare = remaining[Math.floor(Math.random() * remaining.length)];
+                    const square = document.querySelector(`[data-square="${hintSquare}"]`);
+                    square.classList.add('highlight');
+                    setTimeout(() => square.classList.remove('highlight'), 2000);
+                    
+                    showCelebration(`💡 Hint: ${gameState.correctPositions[hintSquare]} goes on ${hintSquare}!`);
+                }
+            } else {
+                showCelebration('💡 Hints not available for this game!');
+            }
+        }
+
+        function autoSolve() {
+            if (currentGame === 'piece-placement') {
+                Object.keys(gameState.correctPositions).forEach(squareName => {
+                    if (!gameState.placedPieces[squareName]) {
+                        const square = document.querySelector(`[data-square="${squareName}"]`);
+                        const piece = gameState.correctPositions[squareName];
+                        square.textContent = piece;
+                        square.classList.add('target');
+                        gameState.placedPieces[squareName] = piece;
+                    }
+                });
+                
+                gameStats.score = 80; // Full score
+                updateStatsDisplay();
+                showSuccess('🤖 Auto-solved! All pieces in correct positions!');
+            }
+        }
+
+        function nextLevel() {
+            showCelebration('🚀 More levels coming soon!');
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            successDiv.textContent = message;
+            successDiv.classList.add('show');
+            
+            // Add confetti
+            for (let i = 0; i < 30; i++) {
+                createConfetti();
+            }
+        }
+
+        function showAchievement(title, description) {
+            document.getElementById('achievementTitle').textContent = title;
+            document.getElementById('achievementDescription').textContent = description;
+            document.getElementById('achievementPopup').classList.add('show');
+        }
+
+        function closeAchievement() {
+            document.getElementById('achievementPopup').classList.remove('show');
+        }
+
+        function showCelebration(message) {
+            const celebration = document.getElementById('celebration');
+            celebration.textContent = message;
+            celebration.classList.add('show');
+            
+            setTimeout(() => {
+                celebration.classList.remove('show');
+            }, 3000);
+        }
+
+        function createConfetti() {
+            const symbols = ['🎉', '🎊', '⭐', '🏆', '👑', '♟️', '♜', '♞', '♝', '♛', '♚'];
+            const confetti = document.createElement('div');
+            confetti.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            confetti.style.position = 'fixed';
+            confetti.style.fontSize = '25px';
+            confetti.style.left = Math.random() * window.innerWidth + 'px';
+            confetti.style.top = '-50px';
+            confetti.style.zIndex = '1000';
+            confetti.style.pointerEvents = 'none';
+            
+            document.body.appendChild(confetti);
+            
+            const animation = confetti.animate([
+                { transform: 'translateY(-50px) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(${window.innerHeight + 50}px) rotate(360deg)`, opacity: 0 }
+            ], {
+                duration: 2000 + Math.random() * 1000,
+                easing: 'ease-out'
+            });
+            
+            animation.onfinish = () => {
+                confetti.remove();
+            };
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            showCelebration('🎮 Welcome to Chess Mini Games! Choose a game to start playing!');
+        });
+    </script>
+</body>
+</html>
