@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chess Kingdom</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <style>
     body {
       margin: 0;
@@ -93,6 +94,20 @@
       font-size: 0.9rem;
       color: #666;
     }
+
+    button {
+      margin-top: 20px;
+      background: #eee;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ddd;
+    }
   </style>
 </head>
 <body>
@@ -125,26 +140,37 @@
         <div class="tile-icon">➡️</div>
         <div>How Pieces Move</div>
       </a>
-      <a href="strategy.html" class="tile">
+      <a href="quiz.html" class="tile">
         <div class="tile-icon">🧠</div>
-        <div>Strategy Tips</div>
+        <div>Quiz Time!</div>
       </a>
-      <a href="practice.html" class="tile">
-        <div class="tile-icon">🕹️</div>
-        <div>Practice Arena</div>
+      <a href="games.html" class="tile">
+        <div class="tile-icon">🎮</div>
+        <div>Play a Game!</div>
       </a>
     </div>
 
+    <button onclick="localStorage.clear(); location.reload();">🔁 Reset Progress</button>
+
     <footer>
-      © 2025 Chess Kingdom. Designed for young learners! 🧒👧
+      © 2025 Luigi Pascal Rondanini. All rights reserved.
     </footer>
   </div>
 
   <script>
-    // Placeholder progress logic – update as needed
-    const progress = 0;
-    document.getElementById("progressFill").style.width = progress + "%";
-    document.getElementById("progressPercent").textContent = progress + "%";
+    function calculateProgress() {
+      let total = 2;
+      let score = 0;
+
+      if (localStorage.getItem("chess_progress_quiz") === "complete") score += 1;
+      if (localStorage.getItem("chess_progress_game") === "complete") score += 1;
+
+      let percent = Math.round((score / total) * 100);
+      document.getElementById("progressFill").style.width = percent + "%";
+      document.getElementById("progressPercent").textContent = percent + "%";
+    }
+
+    calculateProgress();
   </script>
 </body>
 </html>
