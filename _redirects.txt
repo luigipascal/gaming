@@ -1,1 +1,4 @@
 https://gamesis.netlify.app/* https://games.rondanini.net/:splat 301!
+https://gamesis.netlify.app/* https://games.rondanini.net/:splat 301!
+http://games.rondanini.net/* https://games.rondanini.net/:splat 301!
+
