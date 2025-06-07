@@ -623,18 +623,18 @@
                 <h3>🎪 Test Your Chess Facts!</h3>
                 
                 <div class="quiz-question" onclick="checkQuizAnswer(this, true)">
-                    <strong>True or False:</strong> Chess is older than 1,000 years old?
-                    <div style="margin-top: 10px; font-size: 0.9em; color: #666;">(Click to answer!)</div>
+                    <strong>Click if this is TRUE:</strong> Chess is older than 1,000 years old
+                    <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
                 </div>
                 
                 <div class="quiz-question" onclick="checkQuizAnswer(this, false)">
-                    <strong>True or False:</strong> The goal of chess is to capture all the enemy pieces?
-                    <div style="margin-top: 10px; font-size: 0.9em; color: #666;">(Click to answer!)</div>
+                    <strong>Click if this is TRUE:</strong> The goal of chess is to capture all the enemy pieces
+                    <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
                 </div>
                 
                 <div class="quiz-question" onclick="checkQuizAnswer(this, true)">
-                    <strong>True or False:</strong> "Checkmate" means the king is trapped and cannot escape?
-                    <div style="margin-top: 10px; font-size: 0.9em; color: #666;">(Click to answer!)</div>
+                    <strong>Click if this is TRUE:</strong> "Checkmate" means the king is trapped and cannot escape
+                    <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
                 </div>
             </div>
         </div>
@@ -1079,14 +1079,14 @@
             
             if (isCorrect) {
                 element.classList.add('correct');
-                element.innerHTML += '<div style="margin-top: 10px; color: #28a745; font-weight: bold;">✅ Correct! Great job!</div>';
+                element.innerHTML += '<div style="margin-top: 15px; color: #28a745; font-weight: bold; font-size: 1.1em;">✅ Correct! That statement is TRUE! Great job!</div>';
                 showCelebration('🎉 Right answer! You\'re learning fast!');
             } else {
                 element.classList.add('incorrect');
                 if (element.textContent.includes('capture all')) {
-                    element.innerHTML += '<div style="margin-top: 10px; color: #dc3545; font-weight: bold;">❌ Not quite! The goal is to checkmate the king, not capture all pieces!</div>';
+                    element.innerHTML += '<div style="margin-top: 15px; color: #dc3545; font-weight: bold; font-size: 1.1em;">❌ Actually, that statement is FALSE! The goal is to checkmate the king, not capture all pieces!</div>';
                 } else {
-                    element.innerHTML += '<div style="margin-top: 10px; color: #dc3545; font-weight: bold;">❌ Not quite! Try reading the facts again!</div>';
+                    element.innerHTML += '<div style="margin-top: 15px; color: #dc3545; font-weight: bold; font-size: 1.1em;">❌ Actually, that statement is FALSE! Try reading the facts again!</div>';
                 }
             }
         }
