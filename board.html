@@ -90,6 +90,14 @@
             color: #8b4513;
             background: rgba(255, 255, 255, 0.8);
             border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .coordinate.highlighted {
+            background: #ffeb3b !important;
+            color: #2d3436 !important;
+            font-size: 16px;
+            font-weight: bold;
         }
 
         .board-square {
@@ -408,6 +416,50 @@
             60% { transform: translateY(-10px); }
         }
 
+        .completion-message {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 25px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .completion-message h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .completion-message p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .progress-tracker {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 100%;
+            border-radius: 12px;
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+
         @media (max-width: 768px) {
             .interactive-board {
                 grid-template-columns: 25px repeat(8, 45px) 25px;
@@ -660,34 +712,42 @@
             <h2 style="text-align: center; margin-bottom: 25px;">🧠 Board Knowledge Quiz!</h2>
             
             <div class="quiz-question" onclick="checkBoardQuiz(this, true)">
-                <strong>How many squares are on a chessboard?</strong><br>
-                <span style="font-size: 0.9em;">A) 64 squares</span>
+                <strong>Click if this is TRUE:</strong> A chessboard has 64 squares
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
             </div>
             
             <div class="quiz-question" onclick="checkBoardQuiz(this, false)">
-                <strong>How many squares are on a chessboard?</strong><br>
-                <span style="font-size: 0.9em;">B) 48 squares</span>
+                <strong>Click if this is TRUE:</strong> A chessboard has 48 squares
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
             </div>
             
             <div class="quiz-question" onclick="checkBoardQuiz(this, true)">
-                <strong>Which corner should have a white square?</strong><br>
-                <span style="font-size: 0.9em;">A) Bottom-right corner</span>
+                <strong>Click if this is TRUE:</strong> The bottom-right corner should have a white square
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
             </div>
             
             <div class="quiz-question" onclick="checkBoardQuiz(this, false)">
-                <strong>Which corner should have a white square?</strong><br>
-                <span style="font-size: 0.9em;">B) Bottom-left corner</span>
+                <strong>Click if this is TRUE:</strong> The bottom-left corner should have a white square
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
             </div>
             
             <div class="quiz-question" onclick="checkBoardQuiz(this, true)">
-                <strong>What are the vertical columns called?</strong><br>
-                <span style="font-size: 0.9em;">A) Files</span>
+                <strong>Click if this is TRUE:</strong> Vertical columns are called "files"
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
             </div>
             
             <div class="quiz-question" onclick="checkBoardQuiz(this, false)">
-                <strong>What are the vertical columns called?</strong><br>
-                <span style="font-size: 0.9em;">B) Ranks</span>
+                <strong>Click if this is TRUE:</strong> Vertical columns are called "ranks"
+                <div style="margin-top: 10px; font-size: 0.9em; color: #666; font-style: italic;">💡 Click this box if you think this statement is true!</div>
             </div>
+        </div>
+
+        <div class="progress-tracker">
+            <h3>🎖️ Your Board Learning Progress</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">Board Mastery: 0%</p>
         </div>
 
         <div class="celebration" id="celebration"></div>
@@ -741,8 +801,11 @@
                             element.textContent = 9 - row; // 8-1
                         }
                     } else {
-                        // Regular board square
-                        element.className = `board-square ${(row + col) % 2 === 0 ? 'black' : 'white'}`;
+                        // Regular board square - Fixed coloring logic
+                        // We need to ensure h1 (bottom-right) is white
+                        // h1 is at grid position row=8, col=8 in our 0-9 grid
+                        // We want (row + col) % 2 === 0 to give us WHITE for h1
+                        element.className = `board-square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
                         element.dataset.file = String.fromCharCode(96 + col); // a-h
                         element.dataset.rank = 9 - row; // 8-1
                         element.dataset.square = element.dataset.file + element.dataset.rank;
@@ -784,10 +847,16 @@
 
         function showBoardFeature(feature) {
             boardFeaturesExplored.add(feature);
+            updateProgress();
             
-            // Reset all squares
+            // Reset all squares first
             document.querySelectorAll('.board-square').forEach(square => {
                 square.classList.remove('highlighted', 'special', 'center');
+            });
+            
+            // Reset coordinate highlighting
+            document.querySelectorAll('.coordinate').forEach(coord => {
+                coord.classList.remove('highlighted');
             });
             
             // Remove active class from all buttons
@@ -802,7 +871,11 @@
             
             switch(feature) {
                 case 'coordinates':
-                    showCelebration('📍 Every square has a unique coordinate! Click any square to see its name.');
+                    // Highlight all coordinate labels
+                    document.querySelectorAll('.coordinate').forEach(coord => {
+                        coord.classList.add('highlighted');
+                    });
+                    showCelebration('📍 Coordinates highlighted! Every square has a unique address like e4 or d5!');
                     break;
                     
                 case 'center':
@@ -830,6 +903,12 @@
                             square.classList.add('highlighted');
                         }
                     });
+                    // Also highlight the file coordinate
+                    document.querySelectorAll('.coordinate').forEach(coord => {
+                        if (coord.textContent === randomFile) {
+                            coord.classList.add('highlighted');
+                        }
+                    });
                     showCelebration(`📊 Highlighting the ${randomFile}-file! Files are vertical columns.`);
                     break;
                     
@@ -838,6 +917,12 @@
                     squares.forEach(square => {
                         if (square.dataset.rank == randomRank) {
                             square.classList.add('highlighted');
+                        }
+                    });
+                    // Also highlight the rank coordinate
+                    document.querySelectorAll('.coordinate').forEach(coord => {
+                        if (coord.textContent == randomRank) {
+                            coord.classList.add('highlighted');
                         }
                     });
                     showCelebration(`📈 Highlighting rank ${randomRank}! Ranks are horizontal rows.`);
@@ -863,6 +948,10 @@
                 square.style.border = 'none';
             });
             
+            document.querySelectorAll('.coordinate').forEach(coord => {
+                coord.classList.remove('highlighted');
+            });
+            
             document.querySelectorAll('.control-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -873,6 +962,7 @@
 
         function showFactDetail(fact) {
             factsLearned.add(fact);
+            updateProgress();
             showCelebration(`📚 ${boardInfo[fact]}`);
         }
 
@@ -888,15 +978,6 @@
             document.getElementById('challengeQuestion').textContent = `Find the square: ${currentChallenge}`;
             document.getElementById('coordinateAnswer').value = '';
             document.getElementById('challengeResult').textContent = '';
-            
-            // Highlight the target square temporarily
-            const targetSquare = document.querySelector(`[data-square="${currentChallenge}"]`);
-            if (targetSquare) {
-                targetSquare.classList.add('highlighted');
-                setTimeout(() => {
-                    targetSquare.classList.remove('highlighted');
-                }, 1000);
-            }
         }
 
         function checkCoordinate() {
@@ -1024,14 +1105,64 @@
             }
             
             quizAnswered.add(element);
+            updateProgress();
             
             if (isCorrect) {
                 element.classList.add('correct');
-                element.innerHTML += '<div style="margin-top: 10px; color: #28a745; font-weight: bold;">✅ Correct! Excellent!</div>';
+                element.innerHTML += '<div style="margin-top: 15px; color: #28a745; font-weight: bold; font-size: 1.1em;">✅ Correct! That statement is TRUE! Great job!</div>';
                 showCelebration('🎉 Right answer! You\'re mastering the board!');
             } else {
                 element.classList.add('incorrect');
-                element.innerHTML += '<div style="margin-top: 10px; color: #dc3545; font-weight: bold;">❌ Not quite! Keep learning!</div>';
+                element.innerHTML += '<div style="margin-top: 15px; color: #dc3545; font-weight: bold; font-size: 1.1em;">❌ Actually, that statement is FALSE! Keep learning!</div>';
+            }
+        }
+
+        function updateProgress() {
+            const totalItems = 6 + 6 + 6; // features + facts + quiz
+            const completedItems = boardFeaturesExplored.size + factsLearned.size + quizAnswered.size;
+            const progress = Math.round((completedItems / totalItems) * 100);
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `Board Mastery: ${progress}%`;
+            
+            // Save progress
+            saveProgress();
+        }
+
+        function saveProgress() {
+            // Store progress in memory (since localStorage isn't available)
+            window.chessProgress = window.chessProgress || {};
+            window.chessProgress.board = {
+                featuresExplored: Array.from(boardFeaturesExplored),
+                factsLearned: Array.from(factsLearned),
+                quizAnswered: Array.from(quizAnswered).map(q => q.textContent),
+                challengeScore: challengeScore,
+                challengeAttempts: challengeAttempts,
+                completedAt: new Date().toISOString()
+            };
+        }
+
+        function loadProgress() {
+            // Load progress from memory if available
+            if (window.chessProgress && window.chessProgress.board) {
+                const saved = window.chessProgress.board;
+                
+                // Restore sets
+                boardFeaturesExplored = new Set(saved.featuresExplored || []);
+                factsLearned = new Set(saved.factsLearned || []);
+                
+                // Restore quiz answers
+                if (saved.quizAnswered && saved.quizAnswered.length > 0) {
+                    for (let i = 0; i < saved.quizAnswered.length; i++) {
+                        quizAnswered.add(`quiz-${i}`);
+                    }
+                }
+                
+                // Restore challenge scores
+                challengeScore = saved.challengeScore || 0;
+                challengeAttempts = saved.challengeAttempts || 0;
+                
+                updateProgress();
             }
         }
 
@@ -1039,8 +1170,10 @@
             const totalItems = 6 + 6 + 6; // features + facts + quiz
             const completedItems = boardFeaturesExplored.size + factsLearned.size + quizAnswered.size;
             
-            if (completedItems >= totalItems * 0.7) { // 70% completion
-                showCelebration('🏆 Congratulations! You\'ve mastered the chessboard! Ready for piece movements?');
+            saveProgress();
+            
+            if (completedItems >= totalItems * 0.6) { // 60% completion
+                showCelebration('🏆 Congratulations! You\'ve mastered the chessboard!');
                 
                 // Add confetti effect
                 for (let i = 0; i < 50; i++) {
@@ -1048,12 +1181,12 @@
                 }
                 
                 setTimeout(() => {
-                    if (confirm('🚀 Ready to learn how pieces move? Click OK to continue your chess journey!')) {
-                        alert('🎯 Awesome! In a real chess app, this would take you to learn piece movements!');
+                    if (confirm('🚀 Ready to learn about chess pieces? Click OK to continue your chess journey!')) {
+                        window.location.href = 'pieces.html';
                     }
                 }, 2000);
             } else {
-                showCelebration('📚 Explore more board features and take the quiz to become a true board master!');
+                showCelebration('📚 Explore more board features and complete the quiz to become a true board master!');
             }
         }
 
@@ -1095,17 +1228,11 @@
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
             createBoard();
             newChallenge();
             showCelebration('🏁 Welcome to the chessboard! Explore every corner of your battlefield!');
         });
     </script>
-<script>
-  localStorage.setItem("visited_board", "true"); // change the key per page
-</script>
-<script src="progress.js"></script>
-<script src="progress.min.js"></script>
-
-
 </body>
 </html>
