@@ -951,24 +951,8 @@
         }
 
         function highlightPossibleKnightMoves() {
-            const { row, col } = gameState.currentPosition;
-            const knightMoves = [
-                [-2, -1], [-2, 1], [-1, -2], [-1, 2],
-                [1, -2], [1, 2], [2, -1], [2, 1]
-            ];
-            
-            knightMoves.forEach(([dRow, dCol]) => {
-                const newRow = row + dRow;
-                const newCol = col + dCol;
-                
-                if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-                    const targetKey = `${newRow}-${newCol}`;
-                    if (!gameState.visitedSquares.has(targetKey)) {
-                        const square = document.querySelector(`[data-row="${newRow}"][data-col="${newCol}"]`);
-                        square.classList.add('highlight');
-                    }
-                }
-            });
+            // Removed highlighting - players must learn knight moves themselves!
+            // This encourages learning the L-shaped movement pattern
         }
 
         function resetKnightTour() {
@@ -1407,29 +1391,41 @@
         function setupPawnClickHandlers() {
             if (gameState.currentTurn !== 'player' || gameState.gameWon) return;
             
+            // Clear all previous click handlers and highlights
             document.querySelectorAll('.game-square').forEach(square => {
                 square.onclick = null;
                 square.classList.remove('highlight');
             });
             
+            // Add click handlers to ALL squares so players must figure out valid moves
+            document.querySelectorAll('.game-square').forEach(square => {
+                square.onclick = () => attemptPawnMove(square);
+            });
+        }
+
+        function attemptPawnMove(targetSquare) {
+            const targetRow = parseInt(targetSquare.dataset.row);
+            const targetCol = parseInt(targetSquare.dataset.col);
             const pawn = gameState.playerPawn;
             
-            const frontSquare = document.querySelector(`[data-row="${pawn.row + 1}"][data-col="${pawn.col}"]`);
-            if (frontSquare && !frontSquare.textContent) {
-                frontSquare.classList.add('highlight');
-                frontSquare.onclick = () => movePawn('player', pawn.row + 1, pawn.col);
+            // Check if it's a valid pawn move
+            const rowDiff = targetRow - pawn.row;
+            const colDiff = Math.abs(targetCol - pawn.col);
+            
+            // Forward move (one square only)
+            if (rowDiff === 1 && colDiff === 0 && !targetSquare.textContent) {
+                movePawn('player', targetRow, targetCol);
+                return;
             }
             
-            [-1, 1].forEach(offset => {
-                const newCol = pawn.col + offset;
-                if (newCol >= 0 && newCol < 8) {
-                    const captureSquare = document.querySelector(`[data-row="${pawn.row + 1}"][data-col="${newCol}"]`);
-                    if (captureSquare && captureSquare.textContent && captureSquare.style.color === 'rgb(231, 76, 60)') {
-                        captureSquare.classList.add('highlight');
-                        captureSquare.onclick = () => movePawn('player', pawn.row + 1, newCol);
-                    }
-                }
-            });
+            // Diagonal capture
+            if (rowDiff === 1 && colDiff === 1 && targetSquare.textContent && targetSquare.style.color === 'rgb(231, 76, 60)') {
+                movePawn('player', targetRow, targetCol);
+                return;
+            }
+            
+            // Invalid move
+            showCelebration('❌ Invalid pawn move! Pawns move forward one square or capture diagonally.');
         }
 
         function movePawn(player, newRow, newCol) {
