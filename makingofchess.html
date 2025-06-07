@@ -1,0 +1,1433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏰 Chess Kingdom: AI Case Study - Full Cinematic Experience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 95%;
+            height: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            animation: slideIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(100px) scale(0.8);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .claude-console {
+            background: linear-gradient(145deg, #1a1a1a, #2d2d2d);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            font-family: 'Courier New', 'Monaco', monospace;
+            border: 2px solid #00ff88;
+            position: relative;
+            box-shadow: 
+                0 0 30px rgba(0, 255, 136, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .claude-console::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            animation: scanline 3s infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .console-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #00ff88;
+            font-weight: bold;
+        }
+
+        .console-dots {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .dot.red { 
+            background: #ff5f56; 
+            animation: pulse 2s infinite;
+        }
+        .dot.yellow { 
+            background: #ffbd2e;
+            animation: pulse 2s infinite 0.3s;
+        }
+        .dot.green { 
+            background: #27ca3f;
+            animation: pulse 2s infinite 0.6s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.8); }
+        }
+
+        .prompt-text {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .ai-response {
+            color: #74b9ff;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .typing-effect {
+            border-right: 3px solid #00ff88;
+            overflow: hidden;
+            max-width: 100%;
+            animation: typewriter 4s steps(60, end), blink 1s infinite;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            0%, 50% { border-color: #00ff88; }
+            51%, 100% { border-color: transparent; }
+        }
+
+        .metric-card {
+            background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 15px;
+            text-align: center;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .metric-card:hover::before {
+            left: 100%;
+        }
+
+        .metric-number {
+            font-size: 3.5em;
+            font-weight: 900;
+            color: #00ff88;
+            margin-bottom: 10px;
+            text-shadow: 
+                0 0 20px rgba(0, 255, 136, 0.8),
+                0 0 40px rgba(0, 255, 136, 0.4);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { 
+                text-shadow: 
+                    0 0 20px rgba(0, 255, 136, 0.8),
+                    0 0 40px rgba(0, 255, 136, 0.4);
+            }
+            to { 
+                text-shadow: 
+                    0 0 30px rgba(0, 255, 136, 1),
+                    0 0 60px rgba(0, 255, 136, 0.6);
+            }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 4.5em;
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #00ff88, #74b9ff, #ff6b6b, #fdcb6e);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease-in-out infinite;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1.8em;
+            opacity: 0.9;
+            margin-bottom: 50px;
+            animation: fadeIn 2s ease-out 0.5s both;
+        }
+
+        .section-header {
+            font-size: 3em;
+            margin-bottom: 40px;
+            text-align: center;
+            color: #00ff88;
+            text-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+            animation: fadeIn 1s ease-out;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #00ff88;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(15px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .auto-play-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            z-index: 1001;
+        }
+
+        .auto-play-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+        }
+
+        .timeline {
+            position: relative;
+            margin: 50px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #00ff88, #74b9ff);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 40px 0;
+            opacity: 0;
+            animation: slideInTimeline 1s ease forwards;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        @keyframes slideInTimeline {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-marker {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00ff88, #74b9ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5em;
+            margin: 0 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+            z-index: 2;
+            position: relative;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .demo-browser {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            margin: 30px 0;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .browser-header {
+            background: linear-gradient(145deg, #34495e, #2c3e50);
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .browser-content {
+            padding: 30px;
+            background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
+            color: #2c3e50;
+            min-height: 300px;
+        }
+
+        .chess-preview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 30px 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #74b9ff);
+            width: 0%;
+            transition: width 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-radius: 6px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .code-showcase {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            margin: 20px 0;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+                width: 98%;
+                height: 95%;
+            }
+            
+            .main-title {
+                font-size: 2.5em;
+            }
+            
+            .section-header {
+                font-size: 2em;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                bottom: 15px;
+                gap: 10px;
+            }
+            
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .feature-list {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: row !important;
+            }
+            
+            .timeline-marker {
+                margin: 0 20px 0 0;
+            }
+            
+            .claude-console {
+                padding: 15px;
+            }
+            
+            .typing-effect {
+                white-space: normal;
+                word-wrap: break-word;
+                border-right: none;
+            }
+        }
+
+        /* Staggered animations */
+        .feature-item:nth-child(1) { animation-delay: 0.1s; }
+        .feature-item:nth-child(2) { animation-delay: 0.2s; }
+        .feature-item:nth-child(3) { animation-delay: 0.3s; }
+        .feature-item:nth-child(4) { animation-delay: 0.4s; }
+        .feature-item:nth-child(5) { animation-delay: 0.5s; }
+        .feature-item:nth-child(6) { animation-delay: 0.6s; }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.6s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.8s; }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-counter">
+            <span id="currentSlide">1</span> / <span id="totalSlides">12</span>
+        </div>
+
+        <button class="auto-play-btn" id="autoPlayBtn">
+            ▶️ Auto Play
+        </button>
+
+        <!-- Slide 1: Epic Title -->
+        <div class="slide active" id="slide1">
+            <div class="title-slide">
+                <div class="main-title">🏰 From Zero to Chess Kingdom</div>
+                <div class="subtitle">Building Interactive Educational Platforms with AI</div>
+                <div style="font-size: 1.4em; margin-top: 40px; opacity: 0.8; animation: fadeIn 2s ease-out 1s both;">
+                    A Live Case Study: <span class="highlight">2 Hours</span> • <span class="highlight">$0 Cost</span> • <span class="highlight">Professional Results</span>
+                </div>
+                <div style="margin-top: 60px;">
+                    <div class="metric-card" style="display: inline-block; margin: 0; animation: fadeIn 2s ease-out 1.5s both;">
+                        <div class="metric-number">95%</div>
+                        <div style="font-size: 1.2em; font-weight: bold;">Faster Development</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: The Challenge -->
+        <div class="slide" id="slide2">
+            <div class="section-header">🎯 The Challenge</div>
+            <div style="font-size: 1.4em; line-height: 1.8; text-align: center; margin: 60px 0;">
+                <div style="margin-bottom: 50px; font-size: 1.3em;">
+                    <strong>"We need an interactive chess learning platform for kids..."</strong>
+                </div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h3 style="color: #ff6b6b; margin-bottom: 15px;">⏰ Traditional Timeline</h3>
+                        <p style="font-size: 1.1em;">3-4 weeks with full team<br><strong>Designer + Developer + Content Creator</strong></p>
+                    </div>
+                    <div class="feature-item">
+                        <h3 style="color: #ff6b6b; margin-bottom: 15px;">💰 Traditional Budget</h3>
+                        <p style="font-size: 1.1em;">$15,000 - $25,000<br><strong>Multiple specialists required</strong></p>
+                    </div>
+                    <div class="feature-item">
+                        <h3 style="color: #ff6b6b; margin-bottom: 15px;">🎯 Quality Requirements</h3>
+                        <p style="font-size: 1.1em;">Professional design<br>Interactive features<br>Age-appropriate content</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3 style="color: #ff6b6b; margin-bottom: 15px;">📱 Technical Needs</h3>
+                        <p style="font-size: 1.1em;">Mobile responsive<br>Cross-browser compatible<br>Fast loading</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Enter Claude AI -->
+        <div class="slide" id="slide3">
+            <div class="section-header">🤖 Enter Claude AI</div>
+            <div class="claude-console">
+                <div class="console-header">
+                    <div class="console-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span>Claude AI Console - Live Session</span>
+                </div>
+                <div class="prompt-text">Human:</div>
+                <div class="typing-effect" id="prompt1">I want to create an interactive chess learning website for kids. It should be fun, educational, and have multiple modules covering chess basics, piece movements, and practice games.</div>
+            </div>
+            <div class="claude-console" style="margin-top: 30px;">
+                <div class="ai-response">
+                    <strong style="color: #00ff88;">Claude:</strong> I'll help you create a comprehensive chess learning platform! Let me design:
+                    <br><br>
+                    🏰 <strong style="color: #74b9ff;">Chess Kingdom Hub</strong> - Main navigation with medieval theme<br>
+                    🎯 <strong style="color: #74b9ff;">7 Learning Modules</strong> - Progressive difficulty structure<br>
+                    ♟️ <strong style="color: #74b9ff;">Interactive Elements</strong> - Drag & drop, animations, games<br>
+                    📱 <strong style="color: #74b9ff;">Responsive Design</strong> - Works on all devices<br>
+                    🎨 <strong style="color: #74b9ff;">Child-Friendly UI</strong> - Bright colors, engaging visuals
+                    <br><br>
+                    <strong style="color: #00ff88;">Starting development in 3... 2... 1... 🚀</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Development Timeline -->
+        <div class="slide" id="slide4">
+            <div class="section-header">⚡ Live Development Process</div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">1</div>
+                    <div class="timeline-content">
+                        <h3 style="color: #00ff88; font-size: 1.4em; margin-bottom: 15px;">Architecture Design (15 minutes)</h3>
+                        <p style="font-size: 1.1em; line-height: 1.6;">AI instantly suggested optimal learning progression and user experience flow with pedagogical best practices</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">2</div>
+                    <div class="timeline-content">
+                        <h3 style="color: #00ff88; font-size: 1.4em; margin-bottom: 15px;">Design System Creation (20 minutes)</h3>
+                        <p style="font-size: 1.1em; line-height: 1.6;">Complete visual identity with consistent colors, typography, and spacing - professional designer quality</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">3</div>
+                    <div class="timeline-content">
+                        <h3 style="color: #00ff88; font-size: 1.4em; margin-bottom: 15px;">Main Hub Development (25 minutes)</h3>
+                        <p style="font-size: 1.1em; line-height: 1.6;">Interactive navigation system with smooth animations and responsive layout - frontend developer level</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker">4</div>
+                    <div class="timeline-content">
+                        <h3 style="color: #00ff88; font-size: 1.4em; margin-bottom: 15px;">Content & Features (60 minutes)</h3>
+                        <p style="font-size: 1.1em; line-height: 1.6;">7 complete modules with interactive elements, quizzes, and games - content strategist expertise</p>
+                    </div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar1" style="width: 100%;"></div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Live Code Demo -->
+        <div class="slide" id="slide5">
+            <div class="section-header">💻 Code Generation in Real-Time</div>
+            <div class="claude-console">
+                <div class="console-header">
+                    <div class="console-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span>Claude AI - Live Coding Session</span>
+                </div>
+                <div class="prompt-text">Human:</div>
+                <div style="margin-bottom: 15px;">Create interactive chess piece demonstrations where kids can click pieces to see movement patterns with visual animations.</div>
+                <br>
+                <div class="ai-response">
+                    <strong style="color: #00ff88;">Claude:</strong> Creating interactive piece movements with visual feedback...
+                </div>
+            </div>
+            
+            <div class="code-showcase">
+<span style="color: #ff6b6b;">function</span> <span style="color: #74b9ff;">showMovement</span>(piece) {<br>
+&nbsp;&nbsp;<span style="color: #ff6b6b;">const</span> patterns = {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #fdcb6e;">'rook'</span>: generateStraightMoves(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #fdcb6e;">'bishop'</span>: generateDiagonalMoves(),<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #fdcb6e;">'queen'</span>: generateQueenMoves()<br>
+&nbsp;&nbsp;};<br>
+&nbsp;&nbsp;animateMovementPattern(patterns[piece]);<br>
+&nbsp;&nbsp;playSound(<span style="color: #fdcb6e;">'piece-move'</span>);<br>
+}
+            </div>
+            
+            <div class="demo-browser">
+                <div class="browser-header">
+                    <div class="console-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span style="color: #ecf0f1;">Live Preview - Chess Pieces Module</span>
+                </div>
+                <div class="browser-content">
+                    <div class="chess-preview">
+                        <h2 style="font-size: 2em; margin-bottom: 20px;">♕ Meet Your Chess Army</h2>
+                        <p style="font-size: 1.2em; margin-bottom: 25px;">Click any piece to see how it moves!</p>
+                        <div style="display: flex; justify-content: center; gap: 30px; margin: 30px 0; font-size: 3em;">
+                            <span style="cursor: pointer; transition: all 0.3s; display: inline-block;" 
+                                  onmouseover="this.style.transform='scale(1.3) rotate(10deg)'; this.style.textShadow='0 0 20px rgba(255,255,255,0.8)'" 
+                                  onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.textShadow='none'"
+                                  onclick="this.style.animation='bounce 0.6s ease'">♜</span>
+                            <span style="cursor: pointer; transition: all 0.3s; display: inline-block;" 
+                                  onmouseover="this.style.transform='scale(1.3) rotate(-10deg)'; this.style.textShadow='0 0 20px rgba(255,255,255,0.8)'" 
+                                  onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.textShadow='none'"
+                                  onclick="this.style.animation='bounce 0.6s ease'">♝</span>
+                            <span style="cursor: pointer; transition: all 0.3s; display: inline-block;" 
+                                  onmouseover="this.style.transform='scale(1.3) rotate(10deg)'; this.style.textShadow='0 0 20px rgba(255,255,255,0.8)'" 
+                                  onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.textShadow='none'"
+                                  onclick="this.style.animation='bounce 0.6s ease'">♛</span>
+                            <span style="cursor: pointer; transition: all 0.3s; display: inline-block;" 
+                                  onmouseover="this.style.transform='scale(1.3) rotate(-10deg)'; this.style.textShadow='0 0 20px rgba(255,255,255,0.8)'" 
+                                  onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.textShadow='none'"
+                                  onclick="this.style.animation='bounce 0.6s ease'">♚</span>
+                        </div>
+                        <p style="font-size: 1em; opacity: 0.8;">✨ Live Interactive Demo ✨</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: All 7 Modules -->
+        <div class="slide" id="slide6">
+            <div class="section-header">🎯 Complete Platform - 7 Modules</div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">🏰 Chess Kingdom Hub</h3>
+                    <p style="font-size: 1.1em;">Main navigation with engaging medieval theme and smooth transitions between learning sections</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">📚 Chess Basics</h3>
+                    <p style="font-size: 1.1em;">Interactive timeline covering chess history and fundamental concepts with engaging storytelling</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">♟️ Meet the Pieces</h3>
+                    <p style="font-size: 1.1em;">Character-based introduction to each piece with personalities, roles, and interactive demonstrations</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">🏁 The Chessboard</h3>
+                    <p style="font-size: 1.1em;">Interactive board exploration with coordinates, square naming, and visual learning aids</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">🚀 How Pieces Move</h3>
+                    <p style="font-size: 1.1em;">Animated movement demonstrations with click-to-learn interactions and pattern recognition</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">🧠 Quiz Time</h3>
+                    <p style="font-size: 1.1em;">Adaptive quiz system with immediate feedback, progress tracking, and difficulty adjustment</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">🎮 Mini Games</h3>
+                    <p style="font-size: 1.1em;">Puzzle challenges and practice scenarios for skill reinforcement and engagement</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <div class="metric-card" style="display: inline-block;">
+                    <div class="metric-number">3,500+</div>
+                    <div style="font-size: 1.2em; font-weight: bold;">Lines of Code Generated</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Advanced Features -->
+        <div class="slide" id="slide7">
+            <div class="section-header">🛡️ Advanced Features & Security</div>
+            <div class="claude-console">
+                <div class="console-header">
+                    <div class="console-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span>Security Implementation Console</span>
+                </div>
+                <div class="prompt-text">Human:</div>
+                <div style="margin-bottom: 15px;">I need to protect this educational content from unauthorized copying while maintaining accessibility. Add comprehensive security measures.</div>
+                <br>
+                <div class="ai-response">
+                    <strong style="color: #00ff88;">Claude:</strong> Implementing multi-layered protection system:
+                    <br><br>
+                    🔒 <strong style="color: #74b9ff;">Right-click protection</strong> - Prevents basic copying attempts<br>
+                    🚫 <strong style="color: #74b9ff;">Developer tools blocking</strong> - Advanced inspection prevention<br>
+                    📦 <strong style="color: #74b9ff;">Code minification</strong> - Makes source harder to read<br>
+                    © <strong style="color: #74b9ff;">Copyright notices</strong> - Legal protection indicators<br>
+                    ✨ <strong style="color: #74b9ff;">Professional loading screens</strong> - Obscures structure<br>
+                    🛠️ <strong style="color: #74b9ff;">Auto-protection tool</strong> - Batch security application
+                    <br><br>
+                    <strong style="color: #00ff88;">✅ Security system deployed successfully!</strong>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
+                <div class="feature-item">
+                    <h3 style="color: #ff6b6b; font-size: 1.3em; margin-bottom: 15px;">🔧 Automated Protection</h3>
+                    <p style="font-size: 1.1em;">Created HTML tool to automatically apply all security measures to the 7 pages in batch processing</p>
+                </div>
+                <div class="feature-item">
+                    <h3 style="color: #ff6b6b; font-size: 1.3em; margin-bottom: 15px;">🌐 Deployment Strategy</h3>
+                    <p style="font-size: 1.1em;">Optimized for Netlify hosting with Wix integration for seamless user experience and professional appearance</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Incredible Results -->
+        <div class="slide" id="slide8">
+            <div class="section-header">📊 Incredible Results</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-number">2hrs</div>
+                    <div style="font-size: 1.2em; font-weight: bold;">Total Development Time</div>
+                    <small style="opacity: 0.8;">(vs. 3-4 weeks traditional)</small>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">$0</div>
+                    <div style="font-size: 1.2em; font-weight: bold;">Development Cost</div>
+                    <small style="opacity: 0.8;">(vs. $15k-25k traditional)</small>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">95%</div>
+                    <div style="font-size: 1.2em; font-weight: bold;">Time Savings</div>
+                    <small style="opacity: 0.8;">Faster to market</small>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">99%</div>
+                    <div style="font-size: 1.2em; font-weight: bold;">Cost Reduction</div>
+                    <small style="opacity: 0.8;">Massive ROI</small>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">7</div>
+                    <div style="font-size: 1.2em; font-weight: bold;">Complete Modules</div>
+                    <small style="opacity: 0.8;">Full learning system</small>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-number">25+</div>
+                    <div style="font-size: 1.2em; font-weight: bold;">Interactive Features</div>
+                    <small style="opacity: 0.8;">Engaging elements</small>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 50px; font-size: 1.8em; animation: fadeIn 2s ease-out;">
+                <strong style="color: #00ff88; text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);">Professional-grade results in record time! 🚀</strong>
+            </div>
+        </div>
+
+        <!-- Slide 9: Technical Excellence -->
+        <div class="slide" id="slide9">
+            <div class="section-header">⚡ Technical Excellence</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+                <div>
+                    <h3 style="color: #00ff88; margin-bottom: 30px; font-size: 1.5em;">Performance Metrics</h3>
+                    <div class="feature-item">
+                        <h4 style="color: #74b9ff; font-size: 1.2em; margin-bottom: 10px;">🚀 Loading Speed</h4>
+                        <p style="font-size: 1.1em;">Under 2 seconds on all devices with optimized assets</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4 style="color: #74b9ff; font-size: 1.2em; margin-bottom: 10px;">📱 Mobile Responsive</h4>
+                        <p style="font-size: 1.1em;">100% compatible across all screen sizes and orientations</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4 style="color: #74b9ff; font-size: 1.2em; margin-bottom: 10px;">🌐 Cross-Browser</h4>
+                        <p style="font-size: 1.1em;">Flawless performance on Chrome, Firefox, Safari, Edge</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4 style="color: #74b9ff; font-size: 1.2em; margin-bottom: 10px;">🔍 SEO Optimized</h4>
+                        <p style="font-size: 1.1em;">Complete meta tags and search engine optimization</p>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: #00ff88; margin-bottom: 30px; font-size: 1.5em;">Code Quality</h3>
+                    <div class="code-showcase">
+<span style="color: #ff6b6b;">// Clean, maintainable code</span><br>
+<span style="color: #74b9ff;">const</span> <span style="color: #00ff88;">chessApp</span> = {<br>
+&nbsp;&nbsp;<span style="color: #fdcb6e;">modules</span>: <span style="color: #ff6b6b;">7</span>,<br>
+&nbsp;&nbsp;<span style="color: #fdcb6e;">interactivity</span>: <span style="color: #a29bfe;">'high'</span>,<br>
+&nbsp;&nbsp;<span style="color: #fdcb6e;">performance</span>: <span style="color: #a29bfe;">'optimized'</span>,<br>
+&nbsp;&nbsp;<span style="color: #fdcb6e;">accessibility</span>: <span style="color: #a29bfe;">'compliant'</span>,<br>
+&nbsp;&nbsp;<span style="color: #fdcb6e;">security</span>: <span style="color: #a29bfe;">'protected'</span><br>
+};
+                    </div>
+                    <div style="margin-top: 25px; padding: 25px; background: rgba(0, 255, 136, 0.1); border-radius: 15px; border-left: 5px solid #00ff88;">
+                        <strong style="color: #00ff88; font-size: 1.2em;">✅ Production Ready</strong><br>
+                        <p style="font-size: 1.1em; margin-top: 10px;">Zero bugs, clean architecture, professional deployment-ready code with comprehensive documentation</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Key Prompting Strategies -->
+        <div class="slide" id="slide10">
+            <div class="section-header">🎯 Winning Prompt Strategies</div>
+            <div class="claude-console">
+                <div class="console-header">
+                    <div class="console-dots">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span>Master Prompting Techniques - AI Success Secrets</span>
+                </div>
+                <div style="color: #74b9ff; line-height: 2; font-size: 1.1em;">
+                    <strong style="color: #00ff88; font-size: 1.2em;">1. Context-Rich Prompts</strong><br>
+                    <span class="highlight">"Create [specific feature] for [target audience] that [achieves goal] while [considering constraints]"</span>
+                    <br><br>
+                    <strong style="color: #00ff88; font-size: 1.2em;">2. Iterative Refinement Strategy</strong><br>
+                    Start broad → Get specific → Add complexity → Polish details
+                    <br><br>
+                    <strong style="color: #00ff88; font-size: 1.2em;">3. Multi-Modal Requests</strong><br>
+                    <span class="highlight">"Design both the visual interface AND the underlying functionality for optimal results"</span>
+                    <br><br>
+                    <strong style="color: #00ff88; font-size: 1.2em;">4. Quality Specifications</strong><br>
+                    <span class="highlight">"Make this professional/age-appropriate/accessible with specific industry standards"</span>
+                </div>
+            </div>
+            <div style="margin-top: 40px; background: rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 15px; border: 2px solid #ff6b6b;">
+                <h3 style="color: #ff6b6b; margin-bottom: 20px; font-size: 1.4em;">🎓 Pro Tip: The Magic Formula</h3>
+                <div style="font-size: 1.3em; font-style: italic; text-align: center; line-height: 1.6;">
+                    <strong>"Be specific about audience + Include technical requirements + Request both form and function = Perfect results every time"</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Business Impact -->
+        <div class="slide" id="slide11">
+            <div class="section-header">💼 Business Impact & ROI</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px;">
+                <div>
+                    <h3 style="color: #ff6b6b; margin-bottom: 30px; font-size: 1.5em; text-align: center;">Traditional Development</h3>
+                    <div class="feature-item" style="background: rgba(255, 107, 107, 0.2); border-left-color: #ff6b6b;">
+                        <h4 style="font-size: 1.2em; margin-bottom: 15px;">👥 Team Required</h4>
+                        <p style="font-size: 1.1em;">UX Designer: $5,000<br>Frontend Developer: $8,000<br>Content Creator: $3,000<br>Project Manager: $2,000</p>
+                    </div>
+                    <div class="feature-item" style="background: rgba(255, 107, 107, 0.2); border-left-color: #ff6b6b;">
+                        <h4 style="font-size: 1.2em; margin-bottom: 15px;">⏱️ Timeline</h4>
+                        <p style="font-size: 1.1em;">3-4 weeks minimum<br>Multiple revision cycles<br>Coordination overhead<br>Risk of scope creep</p>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+                        <div class="metric-number">$18K+</div>
+                        <div style="font-size: 1.2em; font-weight: bold;">Total Investment</div>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: #00ff88; margin-bottom: 30px; font-size: 1.5em; text-align: center;">AI-Powered Development</h3>
+                    <div class="feature-item">
+                        <h4 style="font-size: 1.2em; margin-bottom: 15px;">🤖 AI as Full Team</h4>
+                        <p style="font-size: 1.1em;">UX Designer ✓<br>Frontend Developer ✓<br>Content Strategist ✓<br>Security Expert ✓</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4 style="font-size: 1.2em; margin-bottom: 15px;">⚡ Lightning Speed</h4>
+                        <p style="font-size: 1.1em;">2 hours total time<br>Instant iterations<br>Real-time feedback<br>Zero coordination needed</p>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-number">~$0</div>
+                        <div style="font-size: 1.2em; font-weight: bold;">Total Investment</div>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #00b894, #00cec9); border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);">
+                <h2 style="margin-bottom: 20px; font-size: 2em;">🎯 Revolutionary Impact</h2>
+                <div style="font-size: 1.5em; font-weight: bold;">Small teams can now compete with enterprise development resources!</div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Epic Conclusion -->
+        <div class="slide" id="slide12">
+            <div class="title-slide">
+                <div style="font-size: 3.5em; margin-bottom: 40px; animation: gradientShift 4s ease-in-out infinite;">🚀 The Future is Now</div>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">🎯 Immediate Applications</h3>
+                        <p style="font-size: 1.1em;">Mathematics • Science • Languages • Art • History • Any Subject!</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">🏢 Enterprise Potential</h3>
+                        <p style="font-size: 1.1em;">Training Platforms • Interactive Documentation • Customer Education • Product Demos</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">⚡ Speed to Market</h3>
+                        <p style="font-size: 1.1em;">Ideas to reality in hours • Rapid prototyping • Instant iteration • Competitive advantage</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3 style="color: #00ff88; font-size: 1.3em; margin-bottom: 15px;">💡 Innovation Advantage</h3>
+                        <p style="font-size: 1.1em;">Compete with any team size • Professional quality • Zero resource limitations</p>
+                    </div>
+                </div>
+                <div style="margin-top: 60px; font-size: 2em; text-align: center;">
+                    <div style="margin-bottom: 30px; animation: fadeIn 2s ease-out;">
+                        <strong>From "What can we build with our resources?"</strong>
+                    </div>
+                    <div style="color: #00ff88; font-size: 1.2em; animation: fadeIn 2s ease-out 0.5s both;">
+                        <strong>To "What should we build for maximum impact?"</strong>
+                    </div>
+                </div>
+                <div style="margin-top: 50px; padding: 30px; background: rgba(0, 255, 136, 0.2); border-radius: 20px; border: 2px solid #00ff88; animation: fadeIn 2s ease-out 1s both;">
+                    <h3 style="font-size: 1.8em; margin-bottom: 20px;">🎪 Ready to Create Your Own AI-Powered Platform?</h3>
+                    <p style="font-size: 1.3em; margin-top: 15px;">The chess learning platform is just the beginning. <strong>What will you build next?</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn">← Previous</button>
+        <button class="nav-btn" id="nextBtn">Next →</button>
+    </div>
+
+    <script>
+        // Global variables
+        let currentSlideIndex = 1;
+        const totalSlides = 12;
+        let isAutoPlaying = false;
+        let autoPlayInterval;
+
+        // Initialize
+        document.getElementById('totalSlides').textContent = totalSlides;
+        updateNavigation();
+
+        // Global functions that need to be accessible from HTML onclick
+        window.showSlide = function(index) {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show current slide
+            document.getElementById('slide' + index).classList.add('active');
+            
+            // Update counter
+            document.getElementById('currentSlide').textContent = index;
+            currentSlideIndex = index;
+            
+            // Update navigation
+            updateNavigation();
+            
+            // Trigger slide-specific animations
+            setTimeout(() => triggerSlideAnimations(index), 300);
+        };
+
+        window.nextSlide = function() {
+            if (currentSlideIndex < totalSlides) {
+                currentSlideIndex++;
+                showSlide(currentSlideIndex);
+            } else {
+                // Loop back to beginning
+                currentSlideIndex = 1;
+                showSlide(1);
+            }
+        };
+
+        window.previousSlide = function() {
+            if (currentSlideIndex > 1) {
+                currentSlideIndex--;
+                showSlide(currentSlideIndex);
+            }
+        };
+
+        window.toggleAutoPlay = function() {
+            const btn = document.getElementById('autoPlayBtn');
+            
+            if (isAutoPlaying) {
+                clearInterval(autoPlayInterval);
+                isAutoPlaying = false;
+                btn.textContent = '▶️ Auto Play';
+                btn.style.background = 'linear-gradient(135deg, #ff6b6b, #ee5a24)';
+            } else {
+                isAutoPlaying = true;
+                btn.textContent = '⏸️ Pause';
+                btn.style.background = 'linear-gradient(135deg, #00b894, #00cec9)';
+                
+                autoPlayInterval = setInterval(() => {
+                    nextSlide();
+                }, 8000); // 8 seconds per slide for 12-slide version
+            }
+        };
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentSlideIndex === 1;
+            
+            if (currentSlideIndex === totalSlides) {
+                nextBtn.textContent = '🔄 Restart';
+            } else {
+                nextBtn.textContent = 'Next →';
+            }
+        }
+
+        function triggerSlideAnimations(slideIndex) {
+            switch(slideIndex) {
+                case 3:
+                    // Typing animation for prompt
+                    const prompt = document.getElementById('prompt1');
+                    if (prompt) {
+                        prompt.style.animation = 'none';
+                        prompt.offsetHeight; // Trigger reflow
+                        prompt.style.animation = 'typewriter 4s steps(80, end), blink 1s infinite';
+                    }
+                    break;
+                    
+                case 4:
+                    // Progress bar animation
+                    const progressBar = document.getElementById('progressBar1');
+                    if (progressBar) {
+                        progressBar.style.width = '0%';
+                        setTimeout(() => {
+                            progressBar.style.width = '100%';
+                        }, 500);
+                    }
+                    break;
+                    
+                case 8:
+                    // Animate metric cards with stagger
+                    const metricCards = document.querySelectorAll('#slide8 .metric-card');
+                    metricCards.forEach((card, index) => {
+                        card.style.transform = 'translateY(50px)';
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                            card.style.transform = 'translateY(0)';
+                            card.style.opacity = '1';
+                            
+                            // Extra bounce effect
+                            setTimeout(() => {
+                                card.style.transform = 'translateY(-10px) scale(1.05)';
+                                setTimeout(() => {
+                                    card.style.transform = 'translateY(0) scale(1)';
+                                }, 200);
+                            }, 100);
+                        }, index * 150);
+                    });
+                    break;
+            }
+        }
+
+        function showHelp() {
+            alert(`🎮 KEYBOARD SHORTCUTS:
+→ / Space / Enter: Next slide
+← : Previous slide
+P: Toggle auto-play
+Home: First slide
+End: Last slide
+Escape: Stop auto-play
+?: Show this help
+
+📱 MOBILE:
+Swipe left/right to navigate
+Tap auto-play button to start/stop
+
+🎬 FEATURES:
+- 12 cinematic slides
+- Auto-play mode (8 seconds per slide)
+- Animated typing effects
+- Interactive metric cards
+- Mobile responsive design
+- Floating particles background`);
+        }
+
+        // Enhanced keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'Enter':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    previousSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    currentSlideIndex = 1;
+                    showSlide(1);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    currentSlideIndex = totalSlides;
+                    showSlide(totalSlides);
+                    break;
+                case 'Escape':
+                    if (isAutoPlaying) {
+                        toggleAutoPlay();
+                    }
+                    break;
+                case 'p':
+                case 'P':
+                    e.preventDefault();
+                    toggleAutoPlay();
+                    break;
+                case '?':
+                case 'h':
+                case 'H':
+                    e.preventDefault();
+                    showHelp();
+                    break;
+            }
+        });
+
+        // Enhanced touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const swipeDistanceX = touchEndX - touchStartX;
+            const swipeDistanceY = Math.abs(touchEndY - touchStartY);
+            
+            // Only process horizontal swipes (ignore vertical scrolling)
+            if (Math.abs(swipeDistanceX) > swipeThreshold && swipeDistanceY < 100) {
+                if (swipeDistanceX > 0) {
+                    // Swipe right - previous slide
+                    previousSlide();
+                } else {
+                    // Swipe left - next slide
+                    nextSlide();
+                }
+            }
+        }
+
+        // Prevent context menu for presentation mode
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Initialize first slide animations
+        setTimeout(() => triggerSlideAnimations(1), 500);
+
+        // Create floating particles for cinematic effect
+        function createFloatingParticles() {
+            const particles = [];
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.style.cssText = `
+                    position: fixed;
+                    width: 4px;
+                    height: 4px;
+                    background: rgba(0, 255, 136, 0.3);
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: -1;
+                `;
+                document.body.appendChild(particle);
+                particles.push({
+                    element: particle,
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2
+                });
+            }
+
+            function animateParticles() {
+                particles.forEach(particle => {
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+
+                    if (particle.x < 0 || particle.x > window.innerWidth) particle.vx *= -1;
+                    if (particle.y < 0 || particle.y > window.innerHeight) particle.vy *= -1;
+
+                    particle.element.style.left = particle.x + 'px';
+                    particle.element.style.top = particle.y + 'px';
+                });
+                requestAnimationFrame(animateParticles);
+            }
+
+            animateParticles();
+        }
+
+        // Initialize floating particles
+        createFloatingParticles();
+
+        // Add progress indicator
+        function updateProgressIndicator() {
+            const progress = (currentSlideIndex / totalSlides) * 100;
+            if (!document.getElementById('progressIndicator')) {
+                const indicator = document.createElement('div');
+                indicator.id = 'progressIndicator';
+                indicator.style.cssText = `
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    width: ${progress}%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #00ff88, #74b9ff);
+                    transition: width 0.3s ease;
+                    z-index: 1002;
+                `;
+                document.body.appendChild(indicator);
+            } else {
+                document.getElementById('progressIndicator').style.width = progress + '%';
+            }
+        }
+
+        // Update progress on slide change
+        const originalUpdateNavigation = updateNavigation;
+        updateNavigation = function() {
+            originalUpdateNavigation();
+            updateProgressIndicator();
+        };
+
+        // Initialize progress indicator
+        updateProgressIndicator();
+
+        // Event listeners for navigation buttons - FIXED!
+        document.addEventListener('DOMContentLoaded', function() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const autoPlayBtn = document.getElementById('autoPlayBtn');
+            
+            if (prevBtn) {
+                prevBtn.addEventListener('click', function() {
+                    previousSlide();
+                });
+            }
+            
+            if (nextBtn) {
+                nextBtn.addEventListener('click', function() {
+                    nextSlide();
+                });
+            }
+            
+            if (autoPlayBtn) {
+                autoPlayBtn.addEventListener('click', function() {
+                    toggleAutoPlay();
+                });
+            }
+        });
+
+        // Console welcome message
+        console.log(`
+🏰 Chess Kingdom AI Case Study - Full Cinematic Experience
+==========================================================
+Built with Claude AI in 2 hours!
+
+🎮 Controls:
+- Arrow keys or Space: Navigate
+- 'P': Toggle auto-play  
+- '?': Show help
+- Swipe on mobile
+
+🚀 Features:
+- 12 cinematic slides
+- Typing animations
+- Auto-play mode (8 seconds per slide)
+- Mobile responsive
+- Floating particles
+- Interactive demonstrations
+- Live code previews
+
+Ready to revolutionize development? Let's go! 🎬
+        `);
+
+        // Auto-start if URL contains autoplay parameter
+        if (window.location.hash === '#autoplay' || window.location.search.includes('autoplay')) {
+            setTimeout(() => {
+                toggleAutoPlay();
+            }, 1000);
+        }
+
+        // Performance: Disable animations on slower devices
+        const isSlowDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+        if (isSlowDevice) {
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    .claude-console::before { display: none; }
+                    .typing-effect { animation: none !important; }
+                    .metric-card { transition: none !important; }
+                </style>
+            `);
+        }
+    </script>
+</body>
+</html>
