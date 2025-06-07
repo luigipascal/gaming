@@ -893,7 +893,7 @@
             });
             
             resetGameStats();
-            highlightPossibleKnightMoves();
+            // Removed highlightPossibleKnightMoves() - no hints!
         }
 
         function moveKnight(targetSquare) {
@@ -934,10 +934,7 @@
             
             updateStatsDisplay();
             
-            document.querySelectorAll('.game-square').forEach(sq => {
-                sq.classList.remove('highlight');
-            });
-            highlightPossibleKnightMoves();
+            // No more highlighting - players must learn knight moves!
             
             if (gameState.visitedSquares.size === 64) {
                 gameState.gameWon = true;
@@ -973,7 +970,7 @@
             startSquare.classList.add('selected');
             gameState.visitedSquares.add('0-0');
             
-            highlightPossibleKnightMoves();
+            // No highlighting - players must learn knight moves themselves!
             document.getElementById('successMessage').classList.remove('show');
         }
 
@@ -1370,7 +1367,8 @@
             document.getElementById('gameInstructions').innerHTML = `
                 <h3>🎯 Pawn Promotion Race</h3>
                 <p>Get your white pawn to the 8th rank before the black pawn reaches the 1st rank!</p>
-                <p><strong>Your turn:</strong> Click on squares ahead of your pawn to move forward!</p>
+                <p><strong>Your turn:</strong> Click anywhere on the board to try moving your pawn!</p>
+                <p><em>Hint: Pawns move forward one square or capture diagonally forward.</em></p>
             `;
         }
 
