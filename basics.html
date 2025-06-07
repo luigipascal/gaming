@@ -317,6 +317,19 @@
             font-size: 24px;
             border-radius: 3px;
             transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .chess-square .white-piece {
+            color: #ffffff;
+            text-shadow: 1px 1px 2px #000000, -1px -1px 2px #000000, 1px -1px 2px #000000, -1px 1px 2px #000000;
+            filter: drop-shadow(0 0 3px #000000);
+        }
+
+        .chess-square .black-piece {
+            color: #2d3436;
+            text-shadow: 1px 1px 2px #ffffff, -1px -1px 2px #ffffff, 1px -1px 2px #ffffff, -1px 1px 2px #ffffff;
+            filter: drop-shadow(0 0 3px #ffffff);
         }
 
         .white-square {
@@ -331,6 +344,12 @@
             transform: scale(1.2);
             z-index: 10;
             position: relative;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         .piece-intro {
@@ -690,10 +709,21 @@
             chessboard.innerHTML = '';
             
             const initialPosition = {
-                '0,0': '♜', '0,1': '♞', '0,2': '♝', '0,3': '♛', '0,4': '♚', '0,5': '♝', '0,6': '♞', '0,7': '♜',
-                '1,0': '♟', '1,1': '♟', '1,2': '♟', '1,3': '♟', '1,4': '♟', '1,5': '♟', '1,6': '♟', '1,7': '♟',
-                '6,0': '♙', '6,1': '♙', '6,2': '♙', '6,3': '♙', '6,4': '♙', '6,5': '♙', '6,6': '♙', '6,7': '♙',
-                '7,0': '♖', '7,1': '♘', '7,2': '♗', '7,3': '♕', '7,4': '♔', '7,5': '♗', '7,6': '♘', '7,7': '♖'
+                // Black pieces (top)
+                '0,0': { piece: '♜', color: 'black' }, '0,1': { piece: '♞', color: 'black' }, '0,2': { piece: '♝', color: 'black' }, 
+                '0,3': { piece: '♛', color: 'black' }, '0,4': { piece: '♚', color: 'black' }, '0,5': { piece: '♝', color: 'black' }, 
+                '0,6': { piece: '♞', color: 'black' }, '0,7': { piece: '♜', color: 'black' },
+                '1,0': { piece: '♟', color: 'black' }, '1,1': { piece: '♟', color: 'black' }, '1,2': { piece: '♟', color: 'black' }, 
+                '1,3': { piece: '♟', color: 'black' }, '1,4': { piece: '♟', color: 'black' }, '1,5': { piece: '♟', color: 'black' }, 
+                '1,6': { piece: '♟', color: 'black' }, '1,7': { piece: '♟', color: 'black' },
+                
+                // White pieces (bottom)
+                '6,0': { piece: '♙', color: 'white' }, '6,1': { piece: '♙', color: 'white' }, '6,2': { piece: '♙', color: 'white' }, 
+                '6,3': { piece: '♙', color: 'white' }, '6,4': { piece: '♙', color: 'white' }, '6,5': { piece: '♙', color: 'white' }, 
+                '6,6': { piece: '♙', color: 'white' }, '6,7': { piece: '♙', color: 'white' },
+                '7,0': { piece: '♖', color: 'white' }, '7,1': { piece: '♘', color: 'white' }, '7,2': { piece: '♗', color: 'white' }, 
+                '7,3': { piece: '♕', color: 'white' }, '7,4': { piece: '♔', color: 'white' }, '7,5': { piece: '♗', color: 'white' }, 
+                '7,6': { piece: '♘', color: 'white' }, '7,7': { piece: '♖', color: 'white' }
             };
             
             for (let row = 0; row < 8; row++) {
@@ -702,10 +732,13 @@
                     square.className = `chess-square ${(row + col) % 2 === 0 ? 'white-square' : 'black-square'}`;
                     square.id = `square-${row}-${col}`;
                     
-                    const piece = initialPosition[`${row},${col}`];
-                    if (piece) {
-                        square.textContent = piece;
-                        square.onclick = () => introducePiece(piece, square);
+                    const pieceData = initialPosition[`${row},${col}`];
+                    if (pieceData) {
+                        const pieceSpan = document.createElement('span');
+                        pieceSpan.textContent = pieceData.piece;
+                        pieceSpan.className = `${pieceData.color}-piece`;
+                        square.appendChild(pieceSpan);
+                        square.onclick = () => introducePiece(pieceData.piece, square);
                     }
                     
                     chessboard.appendChild(square);
@@ -764,26 +797,244 @@
             updateProgress();
             chessIntroActive = true;
             
-            showCelebration('🎬 Welcome to the magical world of chess! Click on any piece to learn about it!');
+            showCelebration('🎬 Watch pieces come to life in this epic chess battle!');
             
-            // Animate pieces appearing
-            const squares = document.querySelectorAll('.chess-square');
-            squares.forEach((square, index) => {
+            // Start the famous "Scholar's Mate" game animation
+            playChessGame();
+        }
+
+        function playChessGame() {
+            // Famous quick checkmate game moves
+            const gameScript = [
+                { 
+                    move: "Welcome to an epic chess battle!",
+                    highlight: [],
+                    delay: 2000
+                },
+                {
+                    move: "White starts by moving pawn in front of king",
+                    from: [6, 4],
+                    to: [4, 4],
+                    piece: '♙',
+                    delay: 2000
+                },
+                {
+                    move: "Black responds with pawn in front of king",
+                    from: [1, 4],
+                    to: [3, 4],
+                    piece: '♟',
+                    delay: 2000
+                },
+                {
+                    move: "White brings out the bishop to attack!",
+                    from: [7, 5],
+                    to: [4, 2],
+                    piece: '♗',
+                    delay: 2000
+                },
+                {
+                    move: "Black moves knight to defend",
+                    from: [0, 1],
+                    to: [2, 2],
+                    piece: '♞',
+                    delay: 2000
+                },
+                {
+                    move: "White queen enters the battle!",
+                    from: [7, 3],
+                    to: [3, 7],
+                    piece: '♕',
+                    delay: 2000
+                },
+                {
+                    move: "Black castles to protect the king",
+                    special: "castle",
+                    delay: 2000
+                },
+                {
+                    move: "🎯 CHECKMATE! The white queen traps the black king!",
+                    from: [3, 7],
+                    to: [1, 7],
+                    piece: '♕',
+                    checkmate: true,
+                    delay: 3000
+                },
+                {
+                    move: "🏆 Game Over! That's how you win at chess!",
+                    delay: 2000
+                }
+            ];
+
+            let moveIndex = 0;
+            
+            function executeMove() {
+                if (moveIndex >= gameScript.length) {
+                    showCelebration('🎊 Amazing game! Click any piece to learn more about it!');
+                    return;
+                }
+
+                const currentMove = gameScript[moveIndex];
+                
+                // Show move description
+                showMoveDescription(currentMove.move);
+                
+                if (currentMove.from && currentMove.to) {
+                    animateMove(currentMove.from, currentMove.to, currentMove.piece, currentMove.checkmate);
+                } else if (currentMove.special === "castle") {
+                    animateCastling();
+                }
+                
+                moveIndex++;
+                setTimeout(executeMove, currentMove.delay);
+            }
+            
+            executeMove();
+        }
+
+        function animateMove(from, to, piece, isCheckmate = false) {
+            const fromSquare = document.getElementById(`square-${from[0]}-${from[1]}`);
+            const toSquare = document.getElementById(`square-${to[0]}-${to[1]}`);
+            
+            if (!fromSquare || !toSquare) return;
+            
+            // Highlight source square
+            fromSquare.style.boxShadow = '0 0 20px #ff6b6b';
+            
+            setTimeout(() => {
+                // Clear source square
+                fromSquare.innerHTML = '';
+                fromSquare.style.boxShadow = '';
+                
+                // Animate to destination
+                toSquare.style.transform = 'scale(1.5)';
+                toSquare.style.boxShadow = '0 0 25px #ffd93d';
+                
+                // Determine piece color based on Unicode character
+                const isWhitePiece = ['♔', '♕', '♖', '♗', '♘', '♙'].includes(piece);
+                const pieceColor = isWhitePiece ? 'white' : 'black';
+                
+                // Create piece with proper color
+                const pieceSpan = document.createElement('span');
+                pieceSpan.textContent = piece;
+                pieceSpan.className = `${pieceColor}-piece`;
+                toSquare.innerHTML = '';
+                toSquare.appendChild(pieceSpan);
+                
                 setTimeout(() => {
-                    square.style.transform = 'scale(1.2)';
+                    toSquare.style.transform = 'scale(1)';
+                    if (!isCheckmate) {
+                        toSquare.style.boxShadow = '';
+                    } else {
+                        // Keep checkmate highlight
+                        toSquare.style.boxShadow = '0 0 30px #ff0000';
+                        // Highlight the checkmated king
+                        const kingSquare = document.getElementById('square-0-4');
+                        if (kingSquare) {
+                            kingSquare.style.boxShadow = '0 0 30px #ff0000';
+                            kingSquare.style.animation = 'shake 0.5s ease-in-out infinite';
+                        }
+                    }
+                }, 500);
+            }, 500);
+        }
+
+        function animateCastling() {
+            // Simple castling animation (king and rook swap positions)
+            const kingSquare = document.getElementById('square-0-4');
+            const rookSquare = document.getElementById('square-0-7');
+            const newKingPos = document.getElementById('square-0-6');
+            const newRookPos = document.getElementById('square-0-5');
+            
+            if (kingSquare && rookSquare && newKingPos && newRookPos) {
+                // Highlight both pieces
+                kingSquare.style.boxShadow = '0 0 20px #ffd93d';
+                rookSquare.style.boxShadow = '0 0 20px #ffd93d';
+                
+                setTimeout(() => {
+                    // Move king
+                    const kingSpan = document.createElement('span');
+                    kingSpan.textContent = '♚';
+                    kingSpan.className = 'black-piece';
+                    newKingPos.innerHTML = '';
+                    newKingPos.appendChild(kingSpan);
+                    kingSquare.innerHTML = '';
+                    
+                    // Move rook
+                    const rookSpan = document.createElement('span');
+                    rookSpan.textContent = '♜';
+                    rookSpan.className = 'black-piece';
+                    newRookPos.innerHTML = '';
+                    newRookPos.appendChild(rookSpan);
+                    rookSquare.innerHTML = '';
+                    
+                    // Clear highlights
+                    kingSquare.style.boxShadow = '';
+                    rookSquare.style.boxShadow = '';
+                    
+                    // Highlight new positions briefly
+                    newKingPos.style.boxShadow = '0 0 20px #00ff00';
+                    newRookPos.style.boxShadow = '0 0 20px #00ff00';
+                    
                     setTimeout(() => {
-                        square.style.transform = 'scale(1)';
-                    }, 200);
-                }, index * 50);
+                        newKingPos.style.boxShadow = '';
+                        newRookPos.style.boxShadow = '';
+                    }, 1000);
+                }, 1000);
+            }
+        }
+
+        function showMoveDescription(description) {
+            // Hide all piece intros first
+            document.querySelectorAll('.piece-intro').forEach(intro => {
+                intro.classList.remove('active');
             });
+            
+            // Create or update move description display
+            let moveDisplay = document.getElementById('move-description');
+            if (!moveDisplay) {
+                moveDisplay = document.createElement('div');
+                moveDisplay.id = 'move-description';
+                moveDisplay.style.cssText = `
+                    background: rgba(255, 255, 255, 0.95);
+                    padding: 15px;
+                    border-radius: 10px;
+                    margin: 15px 0;
+                    text-align: center;
+                    font-weight: bold;
+                    font-size: 1.1em;
+                    color: #2d3436;
+                    border: 3px solid #74b9ff;
+                    animation: fadeIn 0.5s ease;
+                `;
+                document.querySelector('.video-container').appendChild(moveDisplay);
+            }
+            
+            moveDisplay.textContent = description;
+            moveDisplay.style.display = 'block';
         }
 
         function resetChessboard() {
             createChessboard();
+            
+            // Clear any move descriptions
+            const moveDisplay = document.getElementById('move-description');
+            if (moveDisplay) {
+                moveDisplay.remove();
+            }
+            
+            // Clear all piece intros
             document.querySelectorAll('.piece-intro').forEach(intro => {
                 intro.classList.remove('active');
             });
-            showCelebration('🔄 Chessboard reset! Click "Start the Show!" to begin again!');
+            
+            // Clear all special effects
+            document.querySelectorAll('.chess-square').forEach(square => {
+                square.style.boxShadow = '';
+                square.style.animation = '';
+                square.style.transform = '';
+            });
+            
+            showCelebration('🔄 Chessboard reset! Ready for another epic battle!');
         }
 
         function showFactDetail(factNumber) {
