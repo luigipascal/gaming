@@ -278,25 +278,95 @@
             60% { transform: translateY(-10px); }
         }
 
-        .video-placeholder {
+        /* Updated video section styles */
+        .video-section {
             background: linear-gradient(135deg, #6c5ce7, #a29bfe);
             color: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
-            text-align: center;
             margin: 25px 0;
+            text-align: center;
+        }
+
+        .video-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .animated-chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 40px);
+            grid-template-rows: repeat(8, 40px);
+            gap: 2px;
+            margin: 20px auto;
+            justify-content: center;
+            border: 3px solid #fff;
+            border-radius: 10px;
+            padding: 10px;
+            background: #8b4513;
+        }
+
+        .chess-square {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border-radius: 3px;
+            transition: all 0.5s ease;
+        }
+
+        .white-square {
+            background: #f0d9b5;
+        }
+
+        .black-square {
+            background: #b58863;
+        }
+
+        .chess-square:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            position: relative;
+        }
+
+        .piece-intro {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .piece-intro.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .play-button {
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin: 20px 10px;
         }
 
-        .video-placeholder:hover {
-            transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .video-placeholder .play-btn {
-            font-size: 4em;
-            margin-bottom: 15px;
+        .play-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         @media (max-width: 768px) {
@@ -316,6 +386,17 @@
             .timeline-year {
                 margin-right: 0;
                 margin-bottom: 10px;
+            }
+
+            .animated-chessboard {
+                grid-template-columns: repeat(8, 30px);
+                grid-template-rows: repeat(8, 30px);
+            }
+
+            .chess-square {
+                width: 30px;
+                height: 30px;
+                font-size: 18px;
             }
         }
     </style>
@@ -341,10 +422,47 @@
                 </p>
             </div>
 
-            <div class="video-placeholder" onclick="playIntroVideo()">
-                <div class="play-btn">▶️</div>
-                <h3>Watch: "Welcome to Chess Kingdom!"</h3>
-                <p>Click to see how chess pieces come to life in this magical introduction!</p>
+            <!-- Fixed Video Section -->
+            <div class="video-section">
+                <h3>🎬 Welcome to Chess Kingdom!</h3>
+                <p>Watch the pieces come to life in this interactive introduction!</p>
+                
+                <div class="video-container">
+                    <div class="animated-chessboard" id="chessboard"></div>
+                    
+                    <div class="piece-intro" id="piece-king">
+                        <h4>👑 Meet the King!</h4>
+                        <p>The most important piece! Protect him at all costs!</p>
+                    </div>
+                    
+                    <div class="piece-intro" id="piece-queen">
+                        <h4>👸 Meet the Queen!</h4>
+                        <p>The most powerful piece! She can move in any direction!</p>
+                    </div>
+                    
+                    <div class="piece-intro" id="piece-rook">
+                        <h4>🏰 Meet the Rook!</h4>
+                        <p>The castle piece! Strong and sturdy, moves in straight lines!</p>
+                    </div>
+                    
+                    <div class="piece-intro" id="piece-bishop">
+                        <h4>⛪ Meet the Bishop!</h4>
+                        <p>The diagonal mover! Slides across the board at angles!</p>
+                    </div>
+                    
+                    <div class="piece-intro" id="piece-knight">
+                        <h4>🐎 Meet the Knight!</h4>
+                        <p>The jumping horse! Only piece that can jump over others!</p>
+                    </div>
+                    
+                    <div class="piece-intro" id="piece-pawn">
+                        <h4>⚔️ Meet the Pawns!</h4>
+                        <p>The brave soldiers! Small but mighty when they work together!</p>
+                    </div>
+                </div>
+                
+                <button class="play-button" onclick="startChessIntro()">▶️ Start the Show!</button>
+                <button class="play-button" onclick="resetChessboard()">🔄 Watch Again</button>
             </div>
         </div>
 
@@ -560,9 +678,112 @@
         let timelineExplored = new Set();
         let quizAnswered = new Set();
         let videosWatched = new Set();
+        let chessIntroActive = false;
 
         function goBack() {
             window.history.back();
+        }
+
+        // Enhanced chess board animation
+        function createChessboard() {
+            const chessboard = document.getElementById('chessboard');
+            chessboard.innerHTML = '';
+            
+            const initialPosition = {
+                '0,0': '♜', '0,1': '♞', '0,2': '♝', '0,3': '♛', '0,4': '♚', '0,5': '♝', '0,6': '♞', '0,7': '♜',
+                '1,0': '♟', '1,1': '♟', '1,2': '♟', '1,3': '♟', '1,4': '♟', '1,5': '♟', '1,6': '♟', '1,7': '♟',
+                '6,0': '♙', '6,1': '♙', '6,2': '♙', '6,3': '♙', '6,4': '♙', '6,5': '♙', '6,6': '♙', '6,7': '♙',
+                '7,0': '♖', '7,1': '♘', '7,2': '♗', '7,3': '♕', '7,4': '♔', '7,5': '♗', '7,6': '♘', '7,7': '♖'
+            };
+            
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = `chess-square ${(row + col) % 2 === 0 ? 'white-square' : 'black-square'}`;
+                    square.id = `square-${row}-${col}`;
+                    
+                    const piece = initialPosition[`${row},${col}`];
+                    if (piece) {
+                        square.textContent = piece;
+                        square.onclick = () => introducePiece(piece, square);
+                    }
+                    
+                    chessboard.appendChild(square);
+                }
+            }
+        }
+
+        function introducePiece(piece, square) {
+            // Hide all piece intros
+            document.querySelectorAll('.piece-intro').forEach(intro => {
+                intro.classList.remove('active');
+            });
+            
+            // Highlight the clicked piece
+            document.querySelectorAll('.chess-square').forEach(sq => {
+                sq.style.boxShadow = '';
+            });
+            square.style.boxShadow = '0 0 20px #ffd93d';
+            
+            // Show appropriate intro
+            let introId = '';
+            switch(piece) {
+                case '♔':
+                case '♚':
+                    introId = 'piece-king';
+                    break;
+                case '♕':
+                case '♛':
+                    introId = 'piece-queen';
+                    break;
+                case '♖':
+                case '♜':
+                    introId = 'piece-rook';
+                    break;
+                case '♗':
+                case '♝':
+                    introId = 'piece-bishop';
+                    break;
+                case '♘':
+                case '♞':
+                    introId = 'piece-knight';
+                    break;
+                case '♙':
+                case '♟':
+                    introId = 'piece-pawn';
+                    break;
+            }
+            
+            if (introId) {
+                document.getElementById(introId).classList.add('active');
+            }
+        }
+
+        function startChessIntro() {
+            videosWatched.add('intro');
+            updateProgress();
+            chessIntroActive = true;
+            
+            showCelebration('🎬 Welcome to the magical world of chess! Click on any piece to learn about it!');
+            
+            // Animate pieces appearing
+            const squares = document.querySelectorAll('.chess-square');
+            squares.forEach((square, index) => {
+                setTimeout(() => {
+                    square.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        square.style.transform = 'scale(1)';
+                    }, 200);
+                }, index * 50);
+            });
+        }
+
+        function resetChessboard() {
+            createChessboard();
+            document.querySelectorAll('.piece-intro').forEach(intro => {
+                intro.classList.remove('active');
+            });
+            showCelebration('🔄 Chessboard reset! Click "Start the Show!" to begin again!');
         }
 
         function showFactDetail(factNumber) {
@@ -619,12 +840,6 @@
             }
         }
 
-        function playIntroVideo() {
-            videosWatched.add('intro');
-            updateProgress();
-            showCelebration('🎬 Welcome to the magical world of chess! Imagine pieces coming to life in an epic adventure!');
-        }
-
         function updateProgress() {
             const totalItems = 6 + 6 + 3 + 1; // facts + timeline + quiz + video
             const completedItems = factsRead.size + timelineExplored.size + quizAnswered.size + videosWatched.size;
@@ -632,9 +847,49 @@
             
             document.getElementById('progressFill').style.width = progress + '%';
             document.getElementById('progressText').textContent = `Basics Mastery: ${progress}%`;
+            
+            // Save progress to memory
+            saveProgress();
+        }
+
+        function saveProgress() {
+            // Store progress in memory (since localStorage isn't available)
+            window.chessProgress = window.chessProgress || {};
+            window.chessProgress.basics = {
+                factsRead: Array.from(factsRead),
+                timelineExplored: Array.from(timelineExplored),
+                quizAnswered: Array.from(quizAnswered).map(q => q.textContent),
+                videosWatched: Array.from(videosWatched),
+                completedAt: new Date().toISOString()
+            };
+        }
+
+        function loadProgress() {
+            // Load progress from memory if available
+            if (window.chessProgress && window.chessProgress.basics) {
+                const saved = window.chessProgress.basics;
+                
+                // Restore sets
+                factsRead = new Set(saved.factsRead || []);
+                timelineExplored = new Set(saved.timelineExplored || []);
+                videosWatched = new Set(saved.videosWatched || []);
+                
+                // Restore quiz answers (this is more complex, so we'll just track count)
+                if (saved.quizAnswered && saved.quizAnswered.length > 0) {
+                    // Add placeholder items to track quiz completion
+                    for (let i = 0; i < saved.quizAnswered.length; i++) {
+                        quizAnswered.add(`quiz-${i}`);
+                    }
+                }
+                
+                updateProgress();
+            }
         }
 
         function completeBasics() {
+            // Save completion status
+            saveProgress();
+            
             showCelebration('🏆 Congratulations! You\'ve mastered Chess Basics! Ready for the next adventure?');
             
             // Add confetti effect
@@ -644,8 +899,8 @@
             
             setTimeout(() => {
                 if (confirm('🎯 Ready to meet the chess pieces? Click OK to continue your journey!')) {
-                    // In a real app, this would navigate to the pieces page
-                    alert('🚀 Great! In a real chess app, this would take you to learn about the pieces!');
+                    // Navigate to pieces page (you can update this path as needed)
+                    window.location.href = 'pieces.html';
                 }
             }, 2000);
         }
@@ -687,14 +942,10 @@
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
+            loadProgress(); // Load saved progress first
+            createChessboard();
             showCelebration('🎯 Welcome to Chess Basics! Explore everything to become a chess expert!');
         });
     </script>
-<script>
-  localStorage.setItem("visited_basics", "true"); // change the key per page
-</script>
-
-<script src="progress.min.js"></script>
-
 </body>
 </html>
