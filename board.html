@@ -802,9 +802,10 @@
                         }
                     } else {
                         // Regular board square - Fixed coloring logic
-                        // We need to ensure h1 (bottom-right) is white
-                        // h1 is at grid position row=8, col=8 in our 0-9 grid
-                        // We want (row + col) % 2 === 0 to give us WHITE for h1
+                        // For white square in bottom-right (h1), we need:
+                        // h1 is at position row=8, col=8 in our 1-8 range
+                        // In our 0-9 grid system, h1 is at row=8, col=8
+                        // We want (row + col) % 2 === 0 for white squares
                         element.className = `board-square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
                         element.dataset.file = String.fromCharCode(96 + col); // a-h
                         element.dataset.rank = 9 - row; // 8-1
@@ -1021,35 +1022,40 @@
                     
                 case 2:
                     ['a1', 'h1', 'a8', 'h8'].forEach(square => {
-                        document.querySelector(`[data-square="${square}"]`).classList.add('special');
+                        const element = document.querySelector(`[data-square="${square}"]`);
+                        if (element) element.classList.add('special');
                     });
                     showCelebration('2️⃣ Rooks go in all four corners! These are the castle towers!');
                     break;
                     
                 case 3:
                     ['b1', 'g1', 'b8', 'g8'].forEach(square => {
-                        document.querySelector(`[data-square="${square}"]`).classList.add('highlighted');
+                        const element = document.querySelector(`[data-square="${square}"]`);
+                        if (element) element.classList.add('highlighted');
                     });
                     showCelebration('3️⃣ Knights go next to the rooks! Ready to jump into action!');
                     break;
                     
                 case 4:
                     ['c1', 'f1', 'c8', 'f8'].forEach(square => {
-                        document.querySelector(`[data-square="${square}"]`).classList.add('center');
+                        const element = document.querySelector(`[data-square="${square}"]`);
+                        if (element) element.classList.add('center');
                     });
                     showCelebration('4️⃣ Bishops go next to the knights! Diagonal wizards in position!');
                     break;
                     
                 case 5:
                     ['d1', 'd8'].forEach(square => {
-                        document.querySelector(`[data-square="${square}"]`).classList.add('special');
+                        const element = document.querySelector(`[data-square="${square}"]`);
+                        if (element) element.classList.add('special');
                     });
                     showCelebration('5️⃣ Queens go on their own color! White queen on light, black queen on dark!');
                     break;
                     
                 case 6:
                     ['e1', 'e8'].forEach(square => {
-                        document.querySelector(`[data-square="${square}"]`).classList.add('highlighted');
+                        const element = document.querySelector(`[data-square="${square}"]`);
+                        if (element) element.classList.add('highlighted');
                     });
                     showCelebration('6️⃣ Kings take the remaining squares! The most important pieces!');
                     break;
@@ -1063,7 +1069,8 @@
             switch(pattern) {
                 case 'center':
                     ['d4', 'd5', 'e4', 'e5'].forEach(square => {
-                        document.querySelector(`[data-square="${square}"]`).classList.add('center');
+                        const element = document.querySelector(`[data-square="${square}"]`);
+                        if (element) element.classList.add('center');
                     });
                     showCelebration('🎯 Center control is key! These four squares are the heart of the board!');
                     break;
@@ -1092,7 +1099,8 @@
                     
                 case 'safety':
                     ['a1', 'b1', 'c1', 'f1', 'g1', 'h1', 'a8', 'b8', 'c8', 'f8', 'g8', 'h8'].forEach(square => {
-                        document.querySelector(`[data-square="${square}"]`).classList.add('highlighted');
+                        const element = document.querySelector(`[data-square="${square}"]`);
+                        if (element) element.classList.add('highlighted');
                     });
                     showCelebration('🛡️ Back ranks are safety zones! Keep your king protected here!');
                     break;
@@ -1124,53 +1132,11 @@
             
             document.getElementById('progressFill').style.width = progress + '%';
             document.getElementById('progressText').textContent = `Board Mastery: ${progress}%`;
-            
-            // Save progress
-            saveProgress();
-        }
-
-        function saveProgress() {
-            // Store progress in memory (since localStorage isn't available)
-            window.chessProgress = window.chessProgress || {};
-            window.chessProgress.board = {
-                featuresExplored: Array.from(boardFeaturesExplored),
-                factsLearned: Array.from(factsLearned),
-                quizAnswered: Array.from(quizAnswered).map(q => q.textContent),
-                challengeScore: challengeScore,
-                challengeAttempts: challengeAttempts,
-                completedAt: new Date().toISOString()
-            };
-        }
-
-        function loadProgress() {
-            // Load progress from memory if available
-            if (window.chessProgress && window.chessProgress.board) {
-                const saved = window.chessProgress.board;
-                
-                // Restore sets
-                boardFeaturesExplored = new Set(saved.featuresExplored || []);
-                factsLearned = new Set(saved.factsLearned || []);
-                
-                // Restore quiz answers
-                if (saved.quizAnswered && saved.quizAnswered.length > 0) {
-                    for (let i = 0; i < saved.quizAnswered.length; i++) {
-                        quizAnswered.add(`quiz-${i}`);
-                    }
-                }
-                
-                // Restore challenge scores
-                challengeScore = saved.challengeScore || 0;
-                challengeAttempts = saved.challengeAttempts || 0;
-                
-                updateProgress();
-            }
         }
 
         function completeBoard() {
             const totalItems = 6 + 6 + 6; // features + facts + quiz
             const completedItems = boardFeaturesExplored.size + factsLearned.size + quizAnswered.size;
-            
-            saveProgress();
             
             if (completedItems >= totalItems * 0.6) { // 60% completion
                 showCelebration('🏆 Congratulations! You\'ve mastered the chessboard!');
@@ -1228,7 +1194,6 @@
 
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            loadProgress();
             createBoard();
             newChallenge();
             showCelebration('🏁 Welcome to the chessboard! Explore every corner of your battlefield!');

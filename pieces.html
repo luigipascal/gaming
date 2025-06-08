@@ -761,31 +761,6 @@
 
         <div class="battle-comparison">
             <div class="comparison-card">
-                <h3>🛡️ Front Line Heroes</h3>
-                <p>♟️ Pawns (8) - Your brave foot soldiers who protect and advance!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>🏰 Heavy Artillery</h3>
-                <p>♜ Rooks (2) - Your powerful castle towers for long-range attacks!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>🐎 Cavalry Unit</h3>
-                <p>♞ Knights (2) - Your jumping horses for surprise attacks!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>🔮 Magic Division</h3>
-                <p>♝ Bishops (2) - Your diagonal wizards controlling the board!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>👸 Supreme Commander</h3>
-                <p>♛ Queen (1) - Your most powerful warrior combining all abilities!</p>
-            </div>
-            
-            <div class="comparison-card">
                 <h3>👑 The Crown</h3>
                 <p>♚ King (1) - YOU! The leader who must be protected!</p>
             </div>
@@ -794,34 +769,88 @@
         <div class="quiz-section">
             <h2 style="text-align: center; margin-bottom: 25px;">🧠 Piece Knowledge Quiz!</h2>
             
-            <div class="quiz-question" onclick="checkPieceQuiz(this, true)">
-                <strong>Which piece can jump over other pieces?</strong><br>
-                <span style="font-size: 0.9em;">A) The Knight ♞</span>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                    Question 1: Which piece can jump over other pieces?
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 1)">
+                    <strong>A) The Knight ♞</strong>
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 1)">
+                    <strong>B) The Queen ♛</strong>
+                </div>
             </div>
             
-            <div class="quiz-question" onclick="checkPieceQuiz(this, false)">
-                <strong>Which piece can jump over other pieces?</strong><br>
-                <span style="font-size: 0.9em;">B) The Queen ♛</span>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                    Question 2: How many pawns does each player start with?
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 2)">
+                    <strong>A) 8 pawns</strong>
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 2)">
+                    <strong>B) 6 pawns</strong>
+                </div>
             </div>
             
-            <div class="quiz-question" onclick="checkPieceQuiz(this, true)">
-                <strong>How many pawns does each player start with?</strong><br>
-                <span style="font-size: 0.9em;">A) 8 pawns</span>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                    Question 3: Which piece is the most powerful?
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 3)">
+                    <strong>A) The King ♚</strong>
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 3)">
+                    <strong>B) The Queen ♛</strong>
+                </div>
             </div>
             
-            <div class="quiz-question" onclick="checkPieceQuiz(this, false)">
-                <strong>How many pawns does each player start with?</strong><br>
-                <span style="font-size: 0.9em;">B) 6 pawns</span>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                    Question 4: Which pieces move diagonally?
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 4)">
+                    <strong>A) Bishops ♝</strong>
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 4)">
+                    <strong>B) Rooks ♜</strong>
+                </div>
             </div>
             
-            <div class="quiz-question" onclick="checkPieceQuiz(this, true)">
-                <strong>Which piece is the most powerful?</strong><br>
-                <span style="font-size: 0.9em;">A) The Queen ♛</span>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                    Question 5: How many squares can a King move at a time?
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 5)">
+                    <strong>A) One square</strong>
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 5)">
+                    <strong>B) Any number of squares</strong>
+                </div>
             </div>
             
-            <div class="quiz-question" onclick="checkPieceQuiz(this, false)">
-                <strong>Which piece is the most powerful?</strong><br>
-                <span style="font-size: 0.9em;">B) The King ♚</span>
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                    Question 6: What happens when a pawn reaches the end of the board?
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 6)">
+                    <strong>A) It can promote to any piece (except King)</strong>
+                </div>
+                
+                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 6)">
+                    <strong>B) It just stays there as a pawn</strong>
+                </div>
             </div>
         </div>
 
@@ -839,6 +868,7 @@
         let piecesLearned = new Set();
         let quizAnswered = new Set();
         let movementsDemonstrated = new Set();
+        let questionsAnswered = new Set(); // Track which questions have been answered
 
         const pieceMovements = {
             pawn: {
@@ -985,26 +1015,52 @@
             return symbols[pieceName];
         }
 
-        function checkPieceQuiz(element, isCorrect) {
-            if (element.classList.contains('correct') || element.classList.contains('incorrect')) {
-                return; // Already answered
+        function checkPieceQuiz(element, isCorrect, questionNumber) {
+            // Check if this question has already been answered
+            if (questionsAnswered.has(questionNumber)) {
+                return; // Don't allow re-answering
             }
             
+            // Mark question as answered
+            questionsAnswered.add(questionNumber);
             quizAnswered.add(element);
+            
+            // Find all options for this question and disable them
+            const allOptionsInQuestion = element.parentElement.querySelectorAll('.quiz-question');
+            allOptionsInQuestion.forEach(option => {
+                option.style.pointerEvents = 'none'; // Disable clicking
+                option.style.opacity = '0.7';
+            });
             
             if (isCorrect) {
                 element.classList.add('correct');
                 element.innerHTML += '<div style="margin-top: 10px; color: #28a745; font-weight: bold;">✅ Correct! Excellent!</div>';
                 showCelebration('🎉 Right answer! You\'re becoming a chess expert!');
+                
+                // Mark incorrect options
+                allOptionsInQuestion.forEach(option => {
+                    if (option !== element) {
+                        option.classList.add('incorrect');
+                        option.style.opacity = '0.5';
+                    }
+                });
             } else {
                 element.classList.add('incorrect');
                 element.innerHTML += '<div style="margin-top: 10px; color: #dc3545; font-weight: bold;">❌ Not quite! Keep learning!</div>';
+                
+                // Highlight the correct answer
+                allOptionsInQuestion.forEach(option => {
+                    if (option !== element) {
+                        option.classList.add('correct');
+                        option.innerHTML += '<div style="margin-top: 10px; color: #28a745; font-weight: bold;">✅ This was the correct answer!</div>';
+                    }
+                });
             }
         }
 
         function completePieces() {
-            const totalItems = 6 + 6 + 6; // pieces learned + movements demonstrated + quiz answered
-            const completedItems = piecesLearned.size + movementsDemonstrated.size + quizAnswered.size;
+            const totalItems = 6 + 6 + 6; // pieces learned + movements demonstrated + questions answered
+            const completedItems = piecesLearned.size + movementsDemonstrated.size + questionsAnswered.size;
             
             if (completedItems >= totalItems * 0.7) { // 70% completion
                 showCelebration('🏆 Amazing! You\'ve mastered the chess pieces! Ready for the next adventure?');
@@ -1065,11 +1121,30 @@
             showCelebration('♟️ Welcome to your Royal Army! Click on pieces to learn about them!');
         });
     </script>
-<script>
-  localStorage.setItem("visited_pieces", "true"); // change the key per page
-</script>
-<script src="progress.js"></script>
-<script src="progress.min.js"></script>
-
 </body>
-</html>
+</html>🛡️ Front Line Heroes</h3>
+                <p>♟️ Pawns (8) - Your brave foot soldiers who protect and advance!</p>
+            </div>
+            
+            <div class="comparison-card">
+                <h3>🏰 Heavy Artillery</h3>
+                <p>♜ Rooks (2) - Your powerful castle towers for long-range attacks!</p>
+            </div>
+            
+            <div class="comparison-card">
+                <h3>🐎 Cavalry Unit</h3>
+                <p>♞ Knights (2) - Your jumping horses for surprise attacks!</p>
+            </div>
+            
+            <div class="comparison-card">
+                <h3>🔮 Magic Division</h3>
+                <p>♝ Bishops (2) - Your diagonal wizards controlling the board!</p>
+            </div>
+            
+            <div class="comparison-card">
+                <h3>👸 Supreme Commander</h3>
+                <p>♛ Queen (1) - Your most powerful warrior combining all abilities!</p>
+            </div>
+            
+            <div class="comparison-card">
+                <h3>
