@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/*"
+  to = "https://games.rondanini.net/:splat"
+  status = 301
+  conditions = { Host = "gamesis.netlify.app" }
