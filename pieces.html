@@ -59,6 +59,133 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
+        .army-overview {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .army-overview h2 {
+            text-align: center;
+            color: #2d3436;
+            font-size: 2.5em;
+            margin-bottom: 25px;
+        }
+
+        .army-formation {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            gap: 3px;
+            margin: 20px auto;
+            justify-content: center;
+            background: #8b4513;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .formation-square {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .formation-square.white {
+            background: #f0d9b5;
+        }
+
+        .formation-square.black {
+            background: #b58863;
+        }
+
+        .formation-square:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            border-radius: 8px;
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .demo-btn {
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-btn.active {
+            background: linear-gradient(45deg, #e17055, #fdcb6e);
+        }
+
+        .movement-board {
+            display: grid;
+            grid-template-columns: repeat(8, 40px);
+            grid-template-rows: repeat(8, 40px);
+            gap: 1px;
+            margin: 20px auto;
+            justify-content: center;
+            background: #8b4513;
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .mini-square {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .mini-square.white {
+            background: #f0d9b5;
+        }
+
+        .mini-square.black {
+            background: #b58863;
+        }
+
+        .mini-square.highlight {
+            background: #ffeb3b !important;
+            animation: pulse 1s infinite;
+        }
+
+        .mini-square.piece-position {
+            background: #4caf50 !important;
+            color: white;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         .piece-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -139,62 +266,6 @@
             font-weight: bold;
         }
 
-        .movement-demo {
-            background: linear-gradient(135deg, #a8edea, #fed6e3);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .movement-demo h4 {
-            color: #2d3436;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            text-align: center;
-        }
-
-        .mini-board {
-            display: grid;
-            grid-template-columns: repeat(5, 40px);
-            grid-template-rows: repeat(5, 40px);
-            gap: 2px;
-            margin: 15px auto;
-            justify-content: center;
-        }
-
-        .mini-square {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .mini-square.white {
-            background: #f0d9b5;
-        }
-
-        .mini-square.black {
-            background: #b58863;
-        }
-
-        .mini-square.highlight {
-            background: #ffeb3b !important;
-            animation: pulse 1s infinite;
-        }
-
-        .mini-square.piece-position {
-            background: #4caf50 !important;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
         .piece-story {
             background: linear-gradient(135deg, #74b9ff, #0984e3);
             color: white;
@@ -238,104 +309,18 @@
             left: 0;
         }
 
-        .interactive-demo {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 25px;
-            border-radius: 15px;
-            margin: 30px 0;
-            text-align: center;
-        }
-
-        .demo-btn {
-            background: linear-gradient(45deg, #00b894, #00cec9);
-            border: none;
-            padding: 15px 25px;
-            border-radius: 25px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .demo-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .demo-btn.active {
-            background: linear-gradient(45deg, #e17055, #fdcb6e);
-        }
-
-        .army-overview {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            margin: 30px 0;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .army-overview h2 {
-            text-align: center;
-            color: #2d3436;
-            font-size: 2.5em;
-            margin-bottom: 25px;
-        }
-
-        .army-formation {
-            display: grid;
-            grid-template-columns: repeat(8, 50px);
-            gap: 3px;
-            margin: 20px auto;
-            justify-content: center;
-            background: #8b4513;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .formation-square {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .formation-square.white {
-            background: #f0d9b5;
-        }
-
-        .formation-square.black {
-            background: #b58863;
-        }
-
-        .formation-square:hover {
-            transform: scale(1.1);
-            z-index: 10;
-            border-radius: 8px;
-        }
-
-        .battle-comparison {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-        }
-
-        .comparison-card {
-            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
-            color: white;
+        .movement-demo {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
             padding: 20px;
             border-radius: 15px;
-            text-align: center;
-            transition: all 0.3s ease;
+            margin: 20px 0;
         }
 
-        .comparison-card:hover {
-            transform: translateY(-5px);
+        .movement-demo h4 {
+            color: #2d3436;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
         }
 
         .quiz-section {
@@ -346,29 +331,50 @@
             margin: 30px 0;
         }
 
-        .quiz-question {
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
+        .quiz-group {
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: 12px;
-            margin: 15px 0;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            border-radius: 15px;
+            margin-bottom: 20px;
         }
 
-        .quiz-question:hover {
+        .quiz-question-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .quiz-option:hover {
             background: rgba(255, 255, 255, 1);
             transform: scale(1.02);
         }
 
-        .quiz-question.correct {
+        .quiz-option.correct {
             background: #d4edda;
             border: 3px solid #28a745;
         }
 
-        .quiz-question.incorrect {
+        .quiz-option.incorrect {
             background: #f8d7da;
             border: 3px solid #dc3545;
+        }
+
+        .quiz-option.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
         }
 
         .celebration {
@@ -412,6 +418,17 @@
                 height: 40px;
                 font-size: 24px;
             }
+
+            .movement-board {
+                grid-template-columns: repeat(8, 30px);
+                grid-template-rows: repeat(8, 30px);
+            }
+
+            .mini-square {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -452,8 +469,8 @@
         </div>
 
         <div class="interactive-demo">
-            <h2>🎮 Interactive Piece Demonstrator</h2>
-            <p style="margin-bottom: 20px;">Choose a piece to see how it moves!</p>
+            <h2>🎮 Interactive Piece Movement Demonstrator</h2>
+            <p style="margin-bottom: 20px;">Choose a piece to see how it moves on the board!</p>
             
             <button class="demo-btn" onclick="showMovementDemo('pawn')">♟️ Pawn</button>
             <button class="demo-btn" onclick="showMovementDemo('rook')">♜ Rook</button>
@@ -462,7 +479,7 @@
             <button class="demo-btn" onclick="showMovementDemo('queen')">♛ Queen</button>
             <button class="demo-btn" onclick="showMovementDemo('king')">♚ King</button>
             
-            <div id="movementBoard" class="mini-board" style="display: none; margin-top: 20px;">
+            <div id="movementBoard" class="movement-board" style="display: none; margin-top: 20px;">
                 <!-- Movement demonstration board will be generated here -->
             </div>
             
@@ -759,98 +776,43 @@
             </div>
         </div>
 
-        <div class="battle-comparison">
-            <div class="comparison-card">
-                <h3>👑 The Crown</h3>
-                <p>♚ King (1) - YOU! The leader who must be protected!</p>
-            </div>
-        </div>
-
         <div class="quiz-section">
             <h2 style="text-align: center; margin-bottom: 25px;">🧠 Piece Knowledge Quiz!</h2>
             
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
-                    Question 1: Which piece can jump over other pieces?
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 1)">
-                    <strong>A) The Knight ♞</strong>
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 1)">
-                    <strong>B) The Queen ♛</strong>
-                </div>
+            <div class="quiz-group">
+                <div class="quiz-question-text">Question 1: Which piece can jump over other pieces?</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true, 1)">A) The Knight ♞</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false, 1)">B) The Queen ♛</div>
             </div>
             
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
-                    Question 2: How many pawns does each player start with?
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 2)">
-                    <strong>A) 8 pawns</strong>
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 2)">
-                    <strong>B) 6 pawns</strong>
-                </div>
+            <div class="quiz-group">
+                <div class="quiz-question-text">Question 2: How many pawns does each player start with?</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true, 2)">A) 8 pawns</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false, 2)">B) 6 pawns</div>
             </div>
             
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
-                    Question 3: Which piece is the most powerful?
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 3)">
-                    <strong>A) The King ♚</strong>
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 3)">
-                    <strong>B) The Queen ♛</strong>
-                </div>
+            <div class="quiz-group">
+                <div class="quiz-question-text">Question 3: Which piece is the most powerful?</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false, 3)">A) The King ♚</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true, 3)">B) The Queen ♛</div>
             </div>
             
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
-                    Question 4: Which pieces move diagonally?
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 4)">
-                    <strong>A) Bishops ♝</strong>
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 4)">
-                    <strong>B) Rooks ♜</strong>
-                </div>
+            <div class="quiz-group">
+                <div class="quiz-question-text">Question 4: Which pieces move diagonally?</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true, 4)">A) Bishops ♝</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false, 4)">B) Rooks ♜</div>
             </div>
             
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
-                    Question 5: How many squares can a King move at a time?
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 5)">
-                    <strong>A) One square</strong>
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 5)">
-                    <strong>B) Any number of squares</strong>
-                </div>
+            <div class="quiz-group">
+                <div class="quiz-question-text">Question 5: How many squares can a King move at a time?</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true, 5)">A) One square</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false, 5)">B) Any number of squares</div>
             </div>
             
-            <div style="background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
-                <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px; text-align: center;">
-                    Question 6: What happens when a pawn reaches the end of the board?
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, true, 6)">
-                    <strong>A) It can promote to any piece (except King)</strong>
-                </div>
-                
-                <div class="quiz-question" onclick="checkPieceQuiz(this, false, 6)">
-                    <strong>B) It just stays there as a pawn</strong>
-                </div>
+            <div class="quiz-group">
+                <div class="quiz-question-text">Question 6: What happens when a pawn reaches the end of the board?</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true, 6)">A) It can promote to any piece (except King)</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false, 6)">B) It just stays there as a pawn</div>
             </div>
         </div>
 
@@ -866,69 +828,56 @@
     <script>
         let selectedPiece = null;
         let piecesLearned = new Set();
-        let quizAnswered = new Set();
+        let questionsAnswered = new Set();
         let movementsDemonstrated = new Set();
-        let questionsAnswered = new Set(); // Track which questions have been answered
 
         const pieceMovements = {
             pawn: {
-                description: "Pawns move forward one square, or two on their first move. They capture diagonally!",
-                pattern: [
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 1, 0, 0], // Can move here
-                    [0, 1, 'P', 1, 0], // Pawn position, can capture diagonally
-                    [0, 0, 0, 0, 0],
-                    [0, 0, 0, 0, 0]
-                ]
+                description: "Pawns move forward one square, or two on their first move. They capture diagonally forward!",
+                startPos: [6, 3], // row 6, column 3 (d2)
+                moves: [[5, 3], [4, 3]], // Can move 1 or 2 squares forward
+                captures: [[5, 2], [5, 4]] // Diagonal captures
             },
             rook: {
                 description: "Rooks move any number of squares horizontally or vertically!",
-                pattern: [
-                    [0, 0, 1, 0, 0],
-                    [0, 0, 1, 0, 0],
-                    [1, 1, 'R', 1, 1], // Rook can move in all 4 directions
-                    [0, 0, 1, 0, 0],
-                    [0, 0, 1, 0, 0]
+                startPos: [4, 4], // Center of board (e4)
+                moves: [
+                    [4, 0], [4, 1], [4, 2], [4, 3], [4, 5], [4, 6], [4, 7], // Horizontal
+                    [0, 4], [1, 4], [2, 4], [3, 4], [5, 4], [6, 4], [7, 4]  // Vertical
                 ]
             },
             knight: {
                 description: "Knights move in an L-shape: 2 squares one way, then 1 square perpendicular!",
-                pattern: [
-                    [0, 1, 0, 1, 0],
-                    [1, 0, 0, 0, 1],
-                    [0, 0, 'N', 0, 0], // Knight in center
-                    [1, 0, 0, 0, 1],
-                    [0, 1, 0, 1, 0]
+                startPos: [4, 4], // Center of board (e4)
+                moves: [
+                    [2, 3], [2, 5], [3, 2], [3, 6], [5, 2], [5, 6], [6, 3], [6, 5]
                 ]
             },
             bishop: {
                 description: "Bishops move any number of squares diagonally!",
-                pattern: [
-                    [1, 0, 0, 0, 1],
-                    [0, 1, 0, 1, 0],
-                    [0, 0, 'B', 0, 0], // Bishop moves diagonally
-                    [0, 1, 0, 1, 0],
-                    [1, 0, 0, 0, 1]
+                startPos: [4, 4], // Center of board (e4)
+                moves: [
+                    [0, 0], [1, 1], [2, 2], [3, 3], [5, 5], [6, 6], [7, 7], // Main diagonal
+                    [1, 7], [2, 6], [3, 5], [5, 3], [6, 2], [7, 1] // Anti-diagonal
                 ]
             },
             queen: {
                 description: "Queens combine Rook and Bishop powers - any direction, any distance!",
-                pattern: [
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 'Q', 1, 1], // Queen moves everywhere
-                    [1, 1, 1, 1, 1],
-                    [1, 1, 1, 1, 1]
+                startPos: [4, 4], // Center of board (e4)
+                moves: [
+                    // Horizontal and vertical (like rook)
+                    [4, 0], [4, 1], [4, 2], [4, 3], [4, 5], [4, 6], [4, 7],
+                    [0, 4], [1, 4], [2, 4], [3, 4], [5, 4], [6, 4], [7, 4],
+                    // Diagonal (like bishop)
+                    [0, 0], [1, 1], [2, 2], [3, 3], [5, 5], [6, 6], [7, 7],
+                    [1, 7], [2, 6], [3, 5], [5, 3], [6, 2], [7, 1]
                 ]
             },
             king: {
                 description: "Kings move one square in any direction - slow but steady!",
-                pattern: [
-                    [0, 0, 0, 0, 0],
-                    [0, 1, 1, 1, 0],
-                    [0, 1, 'K', 1, 0], // King moves one square around
-                    [0, 1, 1, 1, 0],
-                    [0, 0, 0, 0, 0]
+                startPos: [4, 4], // Center of board (e4)
+                moves: [
+                    [3, 3], [3, 4], [3, 5], [4, 3], [4, 5], [5, 3], [5, 4], [5, 5]
                 ]
             }
         };
@@ -952,8 +901,11 @@
                 card.classList.remove('active');
             });
             
-            document.getElementById(`${pieceName}-card`).classList.add('active');
-            document.getElementById(`${pieceName}-card`).scrollIntoView({ behavior: 'smooth' });
+            const card = document.getElementById(`${pieceName}-card`);
+            if (card) {
+                card.classList.add('active');
+                card.scrollIntoView({ behavior: 'smooth' });
+            }
             
             piecesLearned.add(pieceName);
             selectedPiece = pieceName;
@@ -979,21 +931,25 @@
             const movement = pieceMovements[pieceName];
             description.textContent = movement.description;
             
-            // Create the 5x5 demonstration board
-            for (let row = 0; row < 5; row++) {
-                for (let col = 0; col < 5; col++) {
+            // Create the 8x8 demonstration board
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
                     const square = document.createElement('div');
-                    square.className = `mini-square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
+                    square.className = `mini-square ${(row + col) % 2 === 0 ? 'black' : 'white'}`;
                     
-                    const cellValue = movement.pattern[row][col];
-                    if (typeof cellValue === 'string') {
-                        // This is the piece position
+                    // Check if this is the piece position
+                    if (movement.startPos && movement.startPos[0] === row && movement.startPos[1] === col) {
                         square.textContent = getPieceSymbol(pieceName);
                         square.classList.add('piece-position');
-                    } else if (cellValue === 1) {
-                        // This is a possible move
+                    }
+                    
+                    // Check if this is a valid move
+                    const isMove = movement.moves && movement.moves.some(move => move[0] === row && move[1] === col);
+                    const isCapture = movement.captures && movement.captures.some(cap => cap[0] === row && cap[1] === col);
+                    
+                    if (isMove || isCapture) {
                         square.classList.add('highlight');
-                        square.textContent = '•';
+                        square.textContent = isCapture ? '×' : '•';
                     }
                     
                     board.appendChild(square);
@@ -1015,21 +971,21 @@
             return symbols[pieceName];
         }
 
-        function checkPieceQuiz(element, isCorrect, questionNumber) {
+        function checkQuiz(element, isCorrect, questionNumber) {
             // Check if this question has already been answered
             if (questionsAnswered.has(questionNumber)) {
-                return; // Don't allow re-answering
+                return;
             }
             
             // Mark question as answered
             questionsAnswered.add(questionNumber);
-            quizAnswered.add(element);
             
-            // Find all options for this question and disable them
-            const allOptionsInQuestion = element.parentElement.querySelectorAll('.quiz-question');
-            allOptionsInQuestion.forEach(option => {
-                option.style.pointerEvents = 'none'; // Disable clicking
-                option.style.opacity = '0.7';
+            // Find all options in this question group and disable them
+            const questionGroup = element.parentElement;
+            const allOptions = questionGroup.querySelectorAll('.quiz-option');
+            
+            allOptions.forEach(option => {
+                option.classList.add('disabled');
             });
             
             if (isCorrect) {
@@ -1037,8 +993,8 @@
                 element.innerHTML += '<div style="margin-top: 10px; color: #28a745; font-weight: bold;">✅ Correct! Excellent!</div>';
                 showCelebration('🎉 Right answer! You\'re becoming a chess expert!');
                 
-                // Mark incorrect options
-                allOptionsInQuestion.forEach(option => {
+                // Mark other options as incorrect visually
+                allOptions.forEach(option => {
                     if (option !== element) {
                         option.classList.add('incorrect');
                         option.style.opacity = '0.5';
@@ -1049,7 +1005,7 @@
                 element.innerHTML += '<div style="margin-top: 10px; color: #dc3545; font-weight: bold;">❌ Not quite! Keep learning!</div>';
                 
                 // Highlight the correct answer
-                allOptionsInQuestion.forEach(option => {
+                allOptions.forEach(option => {
                     if (option !== element) {
                         option.classList.add('correct');
                         option.innerHTML += '<div style="margin-top: 10px; color: #28a745; font-weight: bold;">✅ This was the correct answer!</div>';
@@ -1122,29 +1078,4 @@
         });
     </script>
 </body>
-</html>🛡️ Front Line Heroes</h3>
-                <p>♟️ Pawns (8) - Your brave foot soldiers who protect and advance!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>🏰 Heavy Artillery</h3>
-                <p>♜ Rooks (2) - Your powerful castle towers for long-range attacks!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>🐎 Cavalry Unit</h3>
-                <p>♞ Knights (2) - Your jumping horses for surprise attacks!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>🔮 Magic Division</h3>
-                <p>♝ Bishops (2) - Your diagonal wizards controlling the board!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>👸 Supreme Commander</h3>
-                <p>♛ Queen (1) - Your most powerful warrior combining all abilities!</p>
-            </div>
-            
-            <div class="comparison-card">
-                <h3>
+</html>
