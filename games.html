@@ -840,11 +840,78 @@
             const piece = gameState.board[from.row][from.col];
             const target = gameState.board[to.row][to.col];
             
-            if (!piece || (target && target.color === piece.color)) return false;
+            if (!piece) return false;
+            if (target && target.color === piece.color) return false;
             if (from.row === to.row && from.col === to.col) return false;
             
-            // Simplified move validation
-            return true; // For demo purposes, allow all moves
+            const rowDiff = to.row - from.row;
+            const colDiff = to.col - from.col;
+            const rowDiffAbs = Math.abs(rowDiff);
+            const colDiffAbs = Math.abs(colDiff);
+            
+            switch (piece.piece) {
+                case '♙': // White pawn
+                    // Forward move
+                    if (colDiff === 0 && !target) {
+                        if (from.row === 6 && rowDiff === -2) return true; // Initial two-square move
+                        if (rowDiff === -1) return true; // Regular forward move
+                    }
+                    // Capture diagonally
+                    if (colDiffAbs === 1 && rowDiff === -1 && target) return true;
+                    return false;
+                    
+                case '♟': // Black pawn
+                    // Forward move
+                    if (colDiff === 0 && !target) {
+                        if (from.row === 1 && rowDiff === 2) return true; // Initial two-square move
+                        if (rowDiff === 1) return true; // Regular forward move
+                    }
+                    // Capture diagonally
+                    if (colDiffAbs === 1 && rowDiff === 1 && target) return true;
+                    return false;
+                    
+                case '♖': case '♜': // Rook
+                    if (rowDiff === 0 || colDiff === 0) {
+                        return isPathClear(from, to);
+                    }
+                    return false;
+                    
+                case '♗': case '♝': // Bishop
+                    if (rowDiffAbs === colDiffAbs) {
+                        return isPathClear(from, to);
+                    }
+                    return false;
+                    
+                case '♕': case '♛': // Queen
+                    if (rowDiff === 0 || colDiff === 0 || rowDiffAbs === colDiffAbs) {
+                        return isPathClear(from, to);
+                    }
+                    return false;
+                    
+                case '♔': case '♚': // King
+                    return rowDiffAbs <= 1 && colDiffAbs <= 1;
+                    
+                case '♘': case '♞': // Knight
+                    return (rowDiffAbs === 2 && colDiffAbs === 1) || (rowDiffAbs === 1 && colDiffAbs === 2);
+                    
+                default:
+                    return false;
+            }
+        }
+
+        function isPathClear(from, to) {
+            const rowStep = Math.sign(to.row - from.row);
+            const colStep = Math.sign(to.col - from.col);
+            let currentRow = from.row + rowStep;
+            let currentCol = from.col + colStep;
+            
+            while (currentRow !== to.row || currentCol !== to.col) {
+                if (currentRow < 0 || currentRow > 7 || currentCol < 0 || currentCol > 7) return false;
+                if (gameState.board[currentRow][currentCol]) return false;
+                currentRow += rowStep;
+                currentCol += colStep;
+            }
+            return true;
         }
 
         function makeChessMove(from, to) {
@@ -878,6 +945,8 @@
             if (gameState.gameOver) return;
             
             const moves = [];
+            
+            // Find all valid moves for black pieces
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
                     const piece = gameState.board[row][col];
@@ -885,7 +954,36 @@
                         for (let toRow = 0; toRow < 8; toRow++) {
                             for (let toCol = 0; toCol < 8; toCol++) {
                                 if (isValidChessMove({row, col}, {row: toRow, col: toCol})) {
-                                    moves.push({from: {row, col}, to: {row: toRow, col: toCol}});
+                                    const target = gameState.board[toRow][toCol];
+                                    let score = 0;
+                                    
+                                    // Prioritize captures
+                                    if (target) {
+                                        const pieceValues = {
+                                            '♙': 1, '♟': 1,
+                                            '♘': 3, '♞': 3,
+                                            '♗': 3, '♝': 3,
+                                            '♖': 5, '♜': 5,
+                                            '♕': 9, '♛': 9,
+                                            '♔': 100, '♚': 100
+                                        };
+                                        score = pieceValues[target.piece] || 0;
+                                    }
+                                    
+                                    // Add some randomness based on difficulty
+                                    const randomFactor = gameState.difficulty === 'beginner' ? Math.random() * 10 : 
+                                                        gameState.difficulty === 'easy' ? Math.random() * 5 :
+                                                        gameState.difficulty === 'medium' ? Math.random() * 2 :
+                                                        gameState.difficulty === 'hard' ? Math.random() * 1 :
+                                                        Math.random() * 0.5;
+                                    
+                                    score += randomFactor;
+                                    
+                                    moves.push({
+                                        from: {row, col}, 
+                                        to: {row: toRow, col: toCol},
+                                        score: score
+                                    });
                                 }
                             }
                         }
@@ -894,8 +992,23 @@
             }
             
             if (moves.length > 0) {
-                const randomMove = moves[Math.floor(Math.random() * moves.length)];
-                makeChessMove(randomMove.from, randomMove.to);
+                let selectedMove;
+                
+                if (gameState.difficulty === 'beginner') {
+                    // Completely random move
+                    selectedMove = moves[Math.floor(Math.random() * moves.length)];
+                } else {
+                    // Sort by score and pick from top moves
+                    moves.sort((a, b) => b.score - a.score);
+                    const topMoves = moves.slice(0, Math.max(1, Math.floor(moves.length / 3)));
+                    selectedMove = topMoves[Math.floor(Math.random() * topMoves.length)];
+                }
+                
+                makeChessMove(selectedMove.from, selectedMove.to);
+            } else {
+                // No valid moves - stalemate or checkmate
+                gameState.gameOver = true;
+                showSuccess('Game Over! No more moves available.');
             }
         }
 
@@ -906,22 +1019,39 @@
             const puzzles = {
                 easy: [
                     {
+                        // Back rank mate with queen
                         position: [
-                            [null, null, null, null, null, {piece: '♚', color: 'black'}, null, null],
-                            [null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, null],
+                            [null, null, null, null, null, null, {piece: '♚', color: 'black'}, null],
+                            [null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}],
                             [null, null, null, null, null, null, null, null],
                             [null, null, null, null, null, null, null, null],
                             [null, null, null, null, null, null, null, null],
                             [null, null, null, null, null, null, null, null],
                             [null, null, null, null, null, null, null, null],
-                            [{piece: '♖', color: 'white'}, null, null, null, null, null, null, null]
+                            [null, null, null, null, null, null, null, {piece: '♕', color: 'white'}]
                         ],
-                        solution: {from: {row: 0, col: 0}, to: {row: 7, col: 0}},
-                        description: 'Back rank mate! Move your rook.'
+                        solution: {from: {row: 0, col: 7}, to: {row: 7, col: 7}},
+                        description: 'Back rank mate! Move your queen to deliver checkmate on the back rank.'
+                    },
+                    {
+                        // Simple queen mate
+                        position: [
+                            [null, null, null, null, null, null, null, {piece: '♚', color: 'black'}],
+                            [null, null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}],
+                            [null, null, null, null, null, null, null, null],
+                            [null, null, null, null, null, null, null, null],
+                            [null, null, null, null, null, null, null, null],
+                            [null, null, null, null, null, null, null, null],
+                            [{piece: '♕', color: 'white'}, null, null, null, null, null, null, null],
+                            [null, null, null, null, null, null, null, null]
+                        ],
+                        solution: {from: {row: 6, col: 0}, to: {row: 0, col: 0}},
+                        description: 'Queen delivers mate! Find the checkmate square.'
                     }
                 ],
                 medium: [
                     {
+                        // Queen and rook mate
                         position: [
                             [null, null, null, null, null, null, {piece: '♚', color: 'black'}, null],
                             [null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}],
@@ -933,11 +1063,12 @@
                             [null, null, null, {piece: '♕', color: 'white'}, null, null, null, {piece: '♖', color: 'white'}]
                         ],
                         solution: {from: {row: 0, col: 3}, to: {row: 7, col: 3}},
-                        description: 'Queen delivers checkmate!'
+                        description: 'Queen and rook coordination! Set up the mating net.'
                     }
                 ],
                 hard: [
                     {
+                        // Complex queen sacrifice mate
                         position: [
                             [{piece: '♜', color: 'black'}, null, null, null, null, null, {piece: '♚', color: 'black'}, null],
                             [{piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}],
@@ -948,8 +1079,8 @@
                             [null, null, null, null, null, null, null, null],
                             [null, null, null, {piece: '♕', color: 'white'}, null, null, null, {piece: '♖', color: 'white'}]
                         ],
-                        solution: {from: {row: 0, col: 3}, to: {row: 7, col: 3}},
-                        description: 'Complex mating attack!'
+                        solution: {from: {row: 0, col: 3}, to: {row: 7, col: 6}},
+                        description: 'Complex mating attack! Look for the forcing move.'
                     }
                 ]
             };
@@ -963,7 +1094,8 @@
                 board: puzzle.position,
                 solution: puzzle.solution,
                 completed: false,
-                description: puzzle.description
+                description: puzzle.description,
+                selectedSquare: null
             };
             
             renderChessBoard();
@@ -985,19 +1117,26 @@
             if (gameState.selectedSquare) {
                 const move = {from: gameState.selectedSquare, to: {row, col}};
                 
+                // Check if this is the correct solution
                 if (move.from.row === gameState.solution.from.row && 
                     move.from.col === gameState.solution.from.col &&
                     move.to.row === gameState.solution.to.row && 
                     move.to.col === gameState.solution.to.col) {
                     
                     // Correct solution!
-                    makeChessMove(move.from, move.to);
-                    gameState.completed = true;
-                    gameStats.score += 50;
-                    updateStats();
-                    showSuccess('Perfect! You found the checkmate!');
+                    if (isValidChessMove(move.from, move.to)) {
+                        makeChessMove(move.from, move.to);
+                        gameState.completed = true;
+                        gameStats.score += 50;
+                        updateStats();
+                        showSuccess('Perfect! You found the checkmate!');
+                    } else {
+                        showMessage('❌ That move is not valid!');
+                    }
                 } else {
-                    showMessage('❌ Not the best move. Try again!');
+                    showMessage('❌ Not the best move. Look for checkmate!');
+                    gameStats.moves++;
+                    updateStats();
                 }
                 
                 clearSelection();
