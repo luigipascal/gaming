@@ -65,30 +65,13 @@
       border-color: #667eea;
     }
 
-    .tile.completed {
-      border-color: #28a745;
-      background: linear-gradient(135deg, #d4edda 0%, #ffffff 100%);
-    }
-
-    .tile.in-progress {
-      border-color: #ffc107;
-      background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%);
-    }
-
-    .tile-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 15px;
-    }
-
     .tile-icon {
       font-size: 3rem;
       margin-bottom: 15px;
     }
 
     .status-badge {
-      background: #28a745;
+      background: #667eea;
       color: white;
       padding: 4px 8px;
       border-radius: 12px;
@@ -97,23 +80,6 @@
       position: absolute;
       top: 15px;
       right: 15px;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: all 0.3s ease;
-    }
-
-    .status-badge.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .status-badge.completed {
-      background: #28a745;
-    }
-
-    .status-badge.in-progress {
-      background: #ffc107;
-      color: #333;
     }
 
     .tile-title {
@@ -174,37 +140,6 @@
 
     .difficulty-hard {
       background: linear-gradient(45deg, #e84393, #fd79a8);
-    }
-
-    .tile-progress {
-      margin-top: 15px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .tile-progress.show {
-      opacity: 1;
-    }
-
-    .progress-label {
-      font-size: 0.8rem;
-      color: #666;
-      margin-bottom: 5px;
-    }
-
-    .mini-progress-bar {
-      background: #e9ecef;
-      height: 6px;
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .mini-progress-fill {
-      background: linear-gradient(90deg, #28a745, #20c997);
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.5s ease;
-      width: 0%;
     }
 
     .reset-section {
@@ -305,7 +240,7 @@
 
     <div class="tile-grid">
       <a href="basics.html" class="tile" id="tile-basics">
-        <div class="status-badge completed">✅ Completed</div>
+        <div class="status-badge">🎯 Ready</div>
         <div class="tile-icon">🎓</div>
         <div class="tile-title">Chess Basics</div>
         <div class="tile-description">Learn the fundamental rules and concepts of chess</div>
@@ -316,16 +251,10 @@
           <li>Fun knowledge quizzes</li>
         </ul>
         <div class="difficulty-level difficulty-easy">⭐ Beginner Friendly</div>
-        <div class="tile-progress">
-          <div class="progress-label">Learning Progress</div>
-          <div class="mini-progress-bar">
-            <div class="mini-progress-fill" id="progress-basics"></div>
-          </div>
-        </div>
       </a>
 
       <a href="board.html" class="tile" id="tile-board">
-        <div class="status-badge in-progress">📚 In Progress</div>
+        <div class="status-badge">🎯 Ready</div>
         <div class="tile-icon">🏁</div>
         <div class="tile-title">The Chess Board</div>
         <div class="tile-description">Master your 64-square battlefield</div>
@@ -336,12 +265,6 @@
           <li>Coordinate challenge games</li>
         </ul>
         <div class="difficulty-level difficulty-easy">⭐ Easy</div>
-        <div class="tile-progress">
-          <div class="progress-label">Board Mastery</div>
-          <div class="mini-progress-bar">
-            <div class="mini-progress-fill" id="progress-board"></div>
-          </div>
-        </div>
       </a>
 
       <a href="pieces.html" class="tile" id="tile-pieces">
@@ -356,12 +279,6 @@
           <li>Movement demonstrations</li>
         </ul>
         <div class="difficulty-level difficulty-easy">⭐ Easy</div>
-        <div class="tile-progress">
-          <div class="progress-label">Pieces Learned</div>
-          <div class="mini-progress-bar">
-            <div class="mini-progress-fill" id="progress-pieces"></div>
-          </div>
-        </div>
       </a>
 
       <a href="moves.html" class="tile" id="tile-moves">
@@ -376,12 +293,6 @@
           <li>Movement mastery quiz</li>
         </ul>
         <div class="difficulty-level difficulty-medium">⭐⭐ Medium</div>
-        <div class="tile-progress">
-          <div class="progress-label">Movements Mastered</div>
-          <div class="mini-progress-bar">
-            <div class="mini-progress-fill" id="progress-moves"></div>
-          </div>
-        </div>
       </a>
 
       <a href="quiz.html" class="tile" id="tile-quiz">
@@ -396,12 +307,6 @@
           <li>Achievement system</li>
         </ul>
         <div class="difficulty-level difficulty-hard">⭐⭐⭐ Challenging</div>
-        <div class="tile-progress">
-          <div class="progress-label">Quiz Mastery</div>
-          <div class="mini-progress-bar">
-            <div class="mini-progress-fill" id="progress-quiz"></div>
-          </div>
-        </div>
       </a>
 
       <a href="games.html" class="tile" id="tile-games">
@@ -416,12 +321,6 @@
           <li>Capture race battles</li>
         </ul>
         <div class="difficulty-level difficulty-medium">⭐⭐ Fun & Educational</div>
-        <div class="tile-progress">
-          <div class="progress-label">Games Completed</div>
-          <div class="mini-progress-bar">
-            <div class="mini-progress-fill" id="progress-games"></div>
-          </div>
-        </div>
       </a>
     </div>
 
@@ -438,87 +337,6 @@
   </div>
 
   <script>
-    // Simulate progress data - replace with actual localStorage reads
-    const progressData = {
-      basics: {
-        completed: true,
-        progress: 85,
-        status: 'completed'
-      },
-      board: {
-        completed: false,
-        progress: 45,
-        status: 'in-progress'
-      },
-      pieces: {
-        completed: false,
-        progress: 0,
-        status: 'ready'
-      },
-      moves: {
-        completed: false,
-        progress: 0,
-        status: 'ready'
-      },
-      quiz: {
-        completed: false,
-        progress: 0,
-        status: 'ready'
-      },
-      games: {
-        completed: false,
-        progress: 0,
-        status: 'ready'
-      }
-    };
-
-    function updateTileStatus(tileId, data) {
-      const tile = document.getElementById(`tile-${tileId}`);
-      const badge = tile.querySelector('.status-badge');
-      const progressBar = tile.querySelector('.mini-progress-fill');
-      const progressSection = tile.querySelector('.tile-progress');
-      
-      // Update tile class
-      tile.classList.remove('completed', 'in-progress');
-      if (data.status === 'completed') {
-        tile.classList.add('completed');
-      } else if (data.status === 'in-progress') {
-        tile.classList.add('in-progress');
-      }
-      
-      // Update badge
-      badge.classList.remove('completed', 'in-progress');
-      badge.classList.add(data.status);
-      
-      if (data.status === 'completed') {
-        badge.textContent = '✅ Completed';
-        badge.classList.add('show');
-      } else if (data.status === 'in-progress') {
-        badge.textContent = '📚 In Progress';
-        badge.classList.add('show');
-      } else {
-        badge.textContent = '🎯 Ready';
-        badge.classList.remove('show');
-      }
-      
-      // Update progress bar
-      if (data.progress > 0) {
-        progressSection.classList.add('show');
-        progressBar.style.width = data.progress + '%';
-      } else {
-        progressSection.classList.remove('show');
-      }
-    }
-
-    function loadProgress() {
-      // Here you would read from localStorage or your preferred storage
-      // For now, using the demo data above
-      
-      Object.keys(progressData).forEach(section => {
-        updateTileStatus(section, progressData[section]);
-      });
-    }
-
     function resetAllProgress() {
       if (confirm('Are you sure you want to reset all progress? This action cannot be undone.')) {
         // Clear localStorage
@@ -531,26 +349,9 @@
           localStorage.removeItem(key);
         });
         
-        // Reset all progress data
-        Object.keys(progressData).forEach(section => {
-          progressData[section] = {
-            completed: false,
-            progress: 0,
-            status: 'ready'
-          };
-        });
-        
-        // Update display
-        loadProgress();
-        
         alert('✅ All progress has been reset! Start your chess journey fresh.');
       }
     }
-
-    // Load progress when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      loadProgress();
-    });
   </script>
 </body>
 </html>
