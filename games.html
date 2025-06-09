@@ -1012,7 +1012,7 @@
             }
         }
 
-        // Checkmate Puzzles
+        // Checkmate Puzzles - Fixed coordinate system
         function setupCheckmatePuzzles() {
             createBoard();
             
@@ -1021,66 +1021,66 @@
                     {
                         // Back rank mate with queen
                         position: [
-                            [null, null, null, null, null, null, {piece: '♚', color: 'black'}, null],
-                            [null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, {piece: '♕', color: 'white'}]
+                            [null, null, null, null, null, null, {piece: '♚', color: 'black'}, null],  // rank 8
+                            [null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}], // rank 7
+                            [null, null, null, null, null, null, null, null], // rank 6
+                            [null, null, null, null, null, null, null, null], // rank 5
+                            [null, null, null, null, null, null, null, null], // rank 4
+                            [null, null, null, null, null, null, null, null], // rank 3
+                            [null, null, null, null, null, null, null, null], // rank 2
+                            [null, null, null, null, null, null, null, {piece: '♕', color: 'white'}]  // rank 1
                         ],
                         solution: {from: {row: 0, col: 7}, to: {row: 7, col: 7}},
-                        description: 'Back rank mate! Move your queen to deliver checkmate on the back rank.'
+                        description: 'Back rank mate! Move your queen to the back rank.'
                     },
                     {
-                        // Simple queen mate
+                        // Simple queen mate on h-file
                         position: [
-                            [null, null, null, null, null, null, null, {piece: '♚', color: 'black'}],
-                            [null, null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [{piece: '♕', color: 'white'}, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null]
+                            [null, null, null, null, null, null, null, {piece: '♚', color: 'black'}],  // rank 8
+                            [null, null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}], // rank 7
+                            [null, null, null, null, null, null, null, null], // rank 6
+                            [null, null, null, null, null, null, null, null], // rank 5
+                            [null, null, null, null, null, null, null, null], // rank 4
+                            [null, null, null, null, null, null, null, null], // rank 3
+                            [{piece: '♕', color: 'white'}, null, null, null, null, null, null, null], // rank 2
+                            [null, null, null, null, null, null, null, null]  // rank 1
                         ],
                         solution: {from: {row: 6, col: 0}, to: {row: 0, col: 0}},
-                        description: 'Queen delivers mate! Find the checkmate square.'
+                        description: 'Queen delivers mate! Move to the corner.'
                     }
                 ],
                 medium: [
                     {
-                        // Queen and rook mate
+                        // Queen and rook coordination
                         position: [
-                            [null, null, null, null, null, null, {piece: '♚', color: 'black'}, null],
-                            [null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, {piece: '♕', color: 'white'}, null, null, null, {piece: '♖', color: 'white'}]
+                            [null, null, null, null, null, null, {piece: '♚', color: 'black'}, null],  // rank 8
+                            [null, null, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}], // rank 7
+                            [null, null, null, null, null, null, null, null], // rank 6
+                            [null, null, null, null, null, null, null, null], // rank 5
+                            [null, null, null, null, null, null, null, null], // rank 4
+                            [null, null, null, null, null, null, null, null], // rank 3
+                            [null, null, null, null, null, null, null, null], // rank 2
+                            [null, null, null, {piece: '♕', color: 'white'}, null, null, null, {piece: '♖', color: 'white'}]  // rank 1
                         ],
                         solution: {from: {row: 0, col: 3}, to: {row: 7, col: 3}},
-                        description: 'Queen and rook coordination! Set up the mating net.'
+                        description: 'Queen checks! Force the king into mate.'
                     }
                 ],
                 hard: [
                     {
-                        // Complex queen sacrifice mate
+                        // Smothered mate setup
                         position: [
-                            [{piece: '♜', color: 'black'}, null, null, null, null, null, {piece: '♚', color: 'black'}, null],
-                            [{piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, null, null, null, null, null],
-                            [null, null, null, {piece: '♕', color: 'white'}, null, null, null, {piece: '♖', color: 'white'}]
+                            [{piece: '♜', color: 'black'}, null, null, null, null, null, {piece: '♚', color: 'black'}, null],  // rank 8
+                            [{piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, null, null, null, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}, {piece: '♟', color: 'black'}], // rank 7
+                            [null, null, null, null, null, null, null, null], // rank 6
+                            [null, null, null, null, null, null, null, null], // rank 5
+                            [null, null, null, null, null, null, null, null], // rank 4
+                            [null, null, null, null, null, null, null, null], // rank 3
+                            [null, null, null, null, null, null, null, null], // rank 2
+                            [null, null, null, {piece: '♕', color: 'white'}, null, null, null, {piece: '♖', color: 'white'}]  // rank 1
                         ],
                         solution: {from: {row: 0, col: 3}, to: {row: 7, col: 6}},
-                        description: 'Complex mating attack! Look for the forcing move.'
+                        description: 'Find the forcing checkmate move!'
                     }
                 ]
             };
@@ -1102,9 +1102,10 @@
             updateStatus(puzzle.description);
             document.getElementById('nextBtn').style.display = 'inline-block';
             
-            document.querySelectorAll('.game-square').forEach((square, index) => {
-                const row = 7 - Math.floor(index / 8);
-                const col = index % 8;
+            // Set up click handlers for puzzles
+            document.querySelectorAll('.game-square').forEach((square) => {
+                const row = parseInt(square.dataset.boardRow);
+                const col = parseInt(square.dataset.boardCol);
                 square.onclick = () => handlePuzzleClick(square, row, col);
             });
         }
