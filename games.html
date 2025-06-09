@@ -394,6 +394,7 @@
             transition: all 0.3s ease;
             font-weight: bold;
             min-width: 120px;
+            font-size: 14px;
         }
 
         .difficulty-option:hover {
@@ -405,6 +406,24 @@
             background: rgba(255, 255, 255, 0.4);
             border-color: #fff;
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .game-status {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .puzzle-info {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            text-align: center;
         }
 
         .success-message {
@@ -679,6 +698,14 @@
                 <div class="difficulty-badge">⭐-⭐⭐⭐⭐⭐ All Levels</div>
                 <button class="play-btn">Play Now!</button>
             </div>
+
+            <div class="game-card" onclick="selectGame('checkmate-puzzles')">
+                <div class="game-icon">🧩</div>
+                <div class="game-title">Checkmate Puzzles</div>
+                <div class="game-description">Find the best moves to deliver checkmate!</div>
+                <div class="difficulty-badge">⭐-⭐⭐⭐ All Levels</div>
+                <button class="play-btn">Play Now!</button>
+            </div>
         </div>
 
         <!-- Game Container -->
@@ -726,6 +753,18 @@
                 <p id="difficultyDescription">Select a level to start playing!</p>
             </div>
 
+            <!-- Game Status -->
+            <div class="game-status" id="gameStatus" style="display: none;">
+                <div id="gameStatusText">Your turn to move!</div>
+            </div>
+
+            <!-- Puzzle Info -->
+            <div class="puzzle-info" id="puzzleInfo" style="display: none;">
+                <h4>🎯 Your Mission</h4>
+                <p id="puzzleDescription">Find the best moves to achieve checkmate!</p>
+                <div><strong>Moves to mate:</strong> <span id="movesToMate">?</span></div>
+            </div>
+
             <!-- Piece Selector (shown only for piece placement) -->
             <div class="piece-selector" id="pieceSelector" style="display: none;">
                 <h3 style="margin-bottom: 10px;">Select a piece to place:</h3>
@@ -742,6 +781,7 @@
             <div class="game-controls">
                 <button class="control-btn" onclick="resetGame()" id="resetBtn">🔄 Reset</button>
                 <button class="control-btn" onclick="showProgress()" id="progressBtn" style="display: none;">📊 Progress</button>
+                <button class="control-btn" onclick="nextPuzzle()" id="nextPuzzleBtn" style="display: none;">➡️ Next Puzzle</button>
             </div>
 
             <div class="success-message" id="successMessage">
@@ -805,8 +845,14 @@
             'player-vs-computer': {
                 title: '🤖 Player vs Computer',
                 instructions: 'Play a real chess game! Make moves by clicking your pieces, then the destination square.',
-                setup: setupPlayerVsComputer,
+                setup: () => {}, // Will be set after difficulty selection
                 reset: resetPlayerVsComputer
+            },
+            'checkmate-puzzles': {
+                title: '🧩 Checkmate Puzzles',
+                instructions: 'Find the best moves to deliver checkmate! Study the position carefully.',
+                setup: () => {}, // Will be set after difficulty selection  
+                reset: resetCheckmatePuzzles
             }
         };
 
@@ -829,739 +875,15 @@
                 <p>${game.instructions}</p>
             `;
             
-            // Show/hide elements based on game
-            document.getElementById('pieceSelector').style.display = 
-                gameId === 'piece-placement' ? 'block' : 'none';
-            document.getElementById('knightStatus').style.display = 
-                gameId === 'knight-tour' ? 'block' : 'none';
-            document.getElementById('progressBtn').style.display = 
-                gameId === 'knight-tour' ? 'inline-block' : 'none';
-            
-            // Show difficulty selector for new games
-            if (gameId === 'player-vs-computer') {
-                createDifficultySelector();
-                return; // Don't start the game yet, wait for difficulty selection
-            } else {
-                document.getElementById('difficultySelector').style.display = 'none';
-            }
-            
-            // Setup the specific game
-            game.setup();
-            
-            // Start timer
-            startTimer();
-            
-            showCelebration(`🎮 ${game.title} started! Good luck!`);
-        }
-
-        function createDifficultySelector() {
-            const selector = document.getElementById('difficultySelector');
-            const options = document.getElementById('difficultyOptions');
-            const description = document.getElementById('difficultyDescription');
-            
-            options.innerHTML = '';
-            selector.style.display = 'block';
-            
-            const difficulties = [
-                { id: 'beginner', name: 'Beginner', desc: 'Computer makes random moves - perfect for learning!' },
-                { id: 'easy', name: 'Easy', desc: 'Computer thinks 1 move ahead - good for practice!' },
-                { id: 'medium', name: 'Medium', desc: 'Computer thinks 2 moves ahead - challenging!' },
-                { id: 'hard', name: 'Hard', desc: 'Computer thinks 3 moves ahead - expert level!' },
-                { id: 'master', name: 'Chess Master', desc: 'Computer thinks 4+ moves ahead - grandmaster level!' }
-            ];
-            
-            difficulties.forEach(diff => {
-                const option = document.createElement('div');
-                option.className = 'difficulty-option';
-                option.textContent = diff.name;
-                option.onclick = () => selectDifficulty(diff);
-                options.appendChild(option);
-            });
-            
-            description.textContent = 'Select a level to start playing!';
-        }
-
-        function selectDifficulty(difficulty) {
-            document.querySelectorAll('.difficulty-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-            
-            document.getElementById('difficultyDescription').textContent = difficulty.desc;
-            
-            setTimeout(() => {
-                document.getElementById('difficultySelector').style.display = 'none';
-                gameState.difficulty = difficulty.id;
-                games[currentGame].setup();
-                startTimer();
-                showCelebration(`🎮 Chess game started on ${difficulty.name} level!`);
-            }, 1000);
-        }
-
-        function backToMenu() {
-            stopTimer();
-            
-            document.getElementById('gameContainer').classList.remove('active');
-            document.getElementById('gamesGrid').style.display = 'grid';
+            // Hide all elements first
             document.getElementById('pieceSelector').style.display = 'none';
             document.getElementById('knightStatus').style.display = 'none';
             document.getElementById('difficultySelector').style.display = 'none';
+            document.getElementById('gameStatus').style.display = 'none';
+            document.getElementById('puzzleInfo').style.display = 'none';
+            document.getElementById('progressBtn').style.display = 'none';
+            document.getElementById('nextPuzzleBtn').style.display = 'none';
             
-            currentGame = null;
-            resetGameStats();
-        }
-
-        function startTimer() {
-            startTime = Date.now();
-            timer = setInterval(() => {
-                const elapsed = Math.floor((Date.now() - startTime) / 1000);
-                const minutes = Math.floor(elapsed / 60);
-                const seconds = elapsed % 60;
-                document.getElementById('timerDisplay').textContent = 
-                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                gameStats.time = elapsed;
-            }, 1000);
-        }
-
-        function stopTimer() {
-            if (timer) {
-                clearInterval(timer);
-                timer = null;
-            }
-        }
-
-        function resetGameStats() {
-            gameStats = { score: 0, time: 0, moves: 0 };
-            updateStatsDisplay();
-        }
-
-        function updateStatsDisplay() {
-            document.getElementById('scoreDisplay').textContent = gameStats.score;
-            document.getElementById('movesDisplay').textContent = gameStats.moves;
-        }
-
-        function createGameBoard() {
-            const board = document.getElementById('gameBoard');
-            board.innerHTML = '';
-            
-            for (let row = 7; row >= 0; row--) {
-                for (let col = 0; col < 8; col++) {
-                    const square = document.createElement('div');
-                    square.className = `game-square ${(row + col) % 2 === 0 ? 'black' : 'white'}`;
-                    square.dataset.row = row;
-                    square.dataset.col = col;
-                    square.dataset.square = String.fromCharCode(97 + col) + (row + 1);
-                    board.appendChild(square);
-                }
-            }
-            
-            return board;
-        }
-
-        // Piece Placement Game
-        function setupPiecePlacement() {
-            createGameBoard();
-            gameState = {
-                correctPositions: {
-                    'a1': '♜', 'b1': '♞', 'c1': '♝', 'd1': '♛', 'e1': '♚', 'f1': '♝', 'g1': '♞', 'h1': '♜'
-                },
-                placedPieces: {},
-                selectedPiece: null,
-                pieceCount: { '♜': 2, '♞': 2, '♝': 2, '♛': 1, '♚': 1 }
-            };
-            
-            createPieceSelector();
-            
-            document.querySelectorAll('.game-square').forEach(square => {
-                if (square.dataset.row === '0') {
-                    square.onclick = () => placePieceOnBoard(square);
-                    square.style.cursor = 'pointer';
-                }
-            });
-            
-            resetGameStats();
-        }
-
-        function createPieceSelector() {
-            const pieceOptions = document.getElementById('pieceOptions');
-            pieceOptions.innerHTML = '';
-            
-            Object.entries(gameState.pieceCount).forEach(([piece, count]) => {
-                const option = document.createElement('div');
-                option.className = 'piece-option';
-                option.textContent = piece;
-                option.onclick = () => selectPieceForPlacement(piece, option);
-                
-                const countBadge = document.createElement('div');
-                countBadge.className = 'piece-count';
-                countBadge.textContent = count;
-                option.appendChild(countBadge);
-                
-                pieceOptions.appendChild(option);
-            });
-        }
-
-        function selectPieceForPlacement(piece, element) {
-            if (gameState.pieceCount[piece] <= 0) {
-                showCelebration('❌ No more ' + piece + ' pieces available!');
-                return;
-            }
-            
-            document.querySelectorAll('.piece-option').forEach(option => {
-                option.classList.remove('selected');
-            });
-            
-            element.classList.add('selected');
-            gameState.selectedPiece = piece;
-            
-            document.getElementById('selectionStatus').textContent = 
-                `Selected ${piece}! Now click on the board to place it.`;
-        }
-
-        function placePieceOnBoard(square) {
-            if (!gameState.selectedPiece) {
-                showCelebration('❌ Please select a piece first!');
-                return;
-            }
-            
-            if (square.textContent) {
-                showCelebration('❌ Square already occupied!');
-                return;
-            }
-            
-            const piece = gameState.selectedPiece;
-            square.textContent = piece;
-            gameState.placedPieces[square.dataset.square] = piece;
-            gameState.pieceCount[piece]--;
-            
-            gameStats.moves++;
-            updateStatsDisplay();
-            
-            if (gameState.correctPositions[square.dataset.square] === piece) {
-                square.classList.add('target');
-                square.style.color = '#155724';
-                gameStats.score += 10;
-                showCelebration('✅ Correct placement!');
-            } else {
-                square.classList.add('danger');
-                square.style.color = '#721c24';
-                gameStats.score = Math.max(0, gameStats.score - 5);
-                showCelebration('❌ Wrong position!');
-            }
-            
-            updateStatsDisplay();
-            updatePieceSelector();
-            
-            gameState.selectedPiece = null;
-            document.getElementById('selectionStatus').textContent = 'Choose your next piece!';
-            
-            if (Object.keys(gameState.placedPieces).length === 8) {
-                checkPiecePlacementComplete();
-            }
-        }
-
-        function updatePieceSelector() {
-            document.querySelectorAll('.piece-option').forEach(option => {
-                const piece = option.textContent.charAt(0);
-                const count = gameState.pieceCount[piece];
-                const countBadge = option.querySelector('.piece-count');
-                
-                countBadge.textContent = count;
-                
-                if (count === 0) {
-                    option.style.opacity = '0.5';
-                    option.classList.remove('selected');
-                    if (gameState.selectedPiece === piece) {
-                        gameState.selectedPiece = null;
-                        document.getElementById('selectionStatus').textContent = 'Choose a piece above!';
-                    }
-                } else {
-                    option.style.opacity = '1';
-                }
-            });
-        }
-
-        function checkPiecePlacementComplete() {
-            let correct = 0;
-            Object.entries(gameState.placedPieces).forEach(([square, piece]) => {
-                if (gameState.correctPositions[square] === piece) {
-                    correct++;
-                }
-            });
-            
-            if (correct === 8) {
-                stopTimer();
-                gameStats.score += 50;
-                updateStatsDisplay();
-                document.getElementById('successMessage').classList.add('show');
-                showAchievement('Chess Master!', 'Perfect piece placement!');
-                showCelebration('🏆 Perfect! All pieces correctly placed!');
-            }
-        }
-
-        function resetPiecePlacement() {
-            document.querySelectorAll('.game-square').forEach(square => {
-                square.textContent = '';
-                square.className = `game-square ${(parseInt(square.dataset.row) + parseInt(square.dataset.col)) % 2 === 0 ? 'black' : 'white'}`;
-            });
-            gameState.placedPieces = {};
-            gameState.selectedPiece = null;
-            gameState.pieceCount = { '♜': 2, '♞': 2, '♝': 2, '♛': 1, '♚': 1 };
-            createPieceSelector();
-            document.getElementById('selectionStatus').textContent = 'Choose a piece above, then click on the board!';
-            document.getElementById('successMessage').classList.remove('show');
-        }
-
-        // Knight Tour Game
-        function setupKnightTour() {
-            createGameBoard();
-            gameState = {
-                currentPosition: { row: 0, col: 0 },
-                visitedSquares: new Set(),
-                moveCount: 0,
-                gameWon: false
-            };
-            
-            const startSquare = document.querySelector(`[data-row="0"][data-col="0"]`);
-            startSquare.textContent = '♞';
-            startSquare.classList.add('selected');
-            gameState.visitedSquares.add('0-0');
-            
-            updateKnightProgress();
-            
-            document.querySelectorAll('.game-square').forEach(square => {
-                square.onclick = () => moveKnight(square);
-                square.style.cursor = 'pointer';
-            });
-            
-            resetGameStats();
-        }
-
-        function moveKnight(targetSquare) {
-            if (gameState.gameWon) return;
-            
-            const targetRow = parseInt(targetSquare.dataset.row);
-            const targetCol = parseInt(targetSquare.dataset.col);
-            const currentRow = gameState.currentPosition.row;
-            const currentCol = gameState.currentPosition.col;
-            
-            const rowDiff = Math.abs(targetRow - currentRow);
-            const colDiff = Math.abs(targetCol - currentCol);
-            
-            if (!((rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2))) {
-                showCelebration('❌ Invalid move! Knights move in L-shape: 2+1 squares!');
-                return;
-            }
-            
-            const targetKey = `${targetRow}-${targetCol}`;
-            if (gameState.visitedSquares.has(targetKey)) {
-                showCelebration('❌ Already visited this square!');
-                return;
-            }
-            
-            const currentSquare = document.querySelector(`[data-row="${currentRow}"][data-col="${currentCol}"]`);
-            currentSquare.textContent = gameState.moveCount + 1;
-            currentSquare.classList.remove('selected');
-            currentSquare.classList.add('path');
-            
-            targetSquare.textContent = '♞';
-            targetSquare.classList.add('selected');
-            
-            gameState.currentPosition = { row: targetRow, col: targetCol };
-            gameState.visitedSquares.add(targetKey);
-            gameState.moveCount++;
-            gameStats.moves++;
-            gameStats.score += 5;
-            
-            updateStatsDisplay();
-            updateKnightProgress();
-            
-            if (gameState.visitedSquares.size === 64) {
-                gameState.gameWon = true;
-                stopTimer();
-                gameStats.score += 100;
-                updateStatsDisplay();
-                document.getElementById('successMessage').classList.add('show');
-                showAchievement('Knight Master!', 'Completed the Knight\'s Tour!');
-                showCelebration('🏆 Amazing! You visited every square!');
-            }
-        }
-
-        function updateKnightProgress() {
-            const visited = gameState.visitedSquares.size;
-            document.getElementById('visitedCount').textContent = visited;
-            const percentage = (visited / 64) * 100;
-            document.getElementById('knightProgress').style.width = percentage + '%';
-        }
-
-        function showProgress() {
-            const visited = gameState.visitedSquares.size;
-            showCelebration(`📊 Progress: ${visited}/64 squares visited (${Math.round((visited/64)*100)}%)`);
-        }
-
-        function resetKnightTour() {
-            document.querySelectorAll('.game-square').forEach(square => {
-                square.textContent = '';
-                square.className = `game-square ${(parseInt(square.dataset.row) + parseInt(square.dataset.col)) % 2 === 0 ? 'black' : 'white'}`;
-            });
-            
-            gameState = {
-                currentPosition: { row: 0, col: 0 },
-                visitedSquares: new Set(),
-                moveCount: 0,
-                gameWon: false
-            };
-            
-            const startSquare = document.querySelector(`[data-row="0"][data-col="0"]`);
-            startSquare.textContent = '♞';
-            startSquare.classList.add('selected');
-            gameState.visitedSquares.add('0-0');
-            
-            updateKnightProgress();
-            document.getElementById('successMessage').classList.remove('show');
-        }
-
-        // Player vs Computer Chess Game
-        function setupPlayerVsComputer() {
-            createGameBoard();
-            gameState = {
-                board: createInitialChessBoard(),
-                currentPlayer: 'white',
-                selectedSquare: null,
-                gameOver: false,
-                winner: null,
-                difficulty: gameState.difficulty || 'beginner'
-            };
-            
-            renderChessBoard();
-            resetGameStats();
-        }
-
-        function createInitialChessBoard() {
-            const board = Array(8).fill().map(() => Array(8).fill(null));
-            
-            // Black pieces
-            board[0] = [
-                {piece: '♜', color: 'black'}, {piece: '♞', color: 'black'}, 
-                {piece: '♝', color: 'black'}, {piece: '♛', color: 'black'}, 
-                {piece: '♚', color: 'black'}, {piece: '♝', color: 'black'}, 
-                {piece: '♞', color: 'black'}, {piece: '♜', color: 'black'}
-            ];
-            board[1] = Array(8).fill().map(() => ({piece: '♟', color: 'black'}));
-            
-            // White pieces
-            board[6] = Array(8).fill().map(() => ({piece: '♙', color: 'white'}));
-            board[7] = [
-                {piece: '♖', color: 'white'}, {piece: '♘', color: 'white'}, 
-                {piece: '♗', color: 'white'}, {piece: '♕', color: 'white'}, 
-                {piece: '♔', color: 'white'}, {piece: '♗', color: 'white'}, 
-                {piece: '♘', color: 'white'}, {piece: '♖', color: 'white'}
-            ];
-            
-            return board;
-        }
-
-        function renderChessBoard() {
-            const squares = document.querySelectorAll('.game-square');
-            squares.forEach((square, index) => {
-                const row = 7 - Math.floor(index / 8); // Flip for proper display
-                const col = index % 8;
-                const piece = gameState.board[row][col];
-                
-                square.textContent = piece ? piece.piece : '';
-                square.style.color = piece && piece.color === 'white' ? '#2980b9' : '#e74c3c';
-                square.classList.remove('selected', 'valid-move', 'target');
-                square.onclick = () => handleChessClick(square, row, col);
-            });
-        }
-
-        function handleChessClick(square, row, col) {
-            if (gameState.gameOver || gameState.currentPlayer !== 'white') return;
-            
-            const piece = gameState.board[row][col];
-            
-            if (gameState.selectedSquare) {
-                if (isValidChessMove(gameState.selectedSquare, {row, col})) {
-                    makeChessMove(gameState.selectedSquare, {row, col});
-                    clearChessSelection();
-                    
-                    if (!gameState.gameOver) {
-                        setTimeout(() => {
-                            makeComputerMove();
-                        }, 1000);
-                    }
-                } else {
-                    clearChessSelection();
-                    if (piece && piece.color === 'white') {
-                        selectChessSquare(square, row, col);
-                    }
-                }
-            } else if (piece && piece.color === 'white') {
-                selectChessSquare(square, row, col);
-            }
-        }
-
-        function selectChessSquare(square, row, col) {
-            gameState.selectedSquare = {row, col};
-            square.classList.add('selected');
-            highlightValidChessMoves(row, col);
-        }
-
-        function clearChessSelection() {
-            document.querySelectorAll('.game-square').forEach(sq => {
-                sq.classList.remove('selected', 'valid-move');
-            });
-            gameState.selectedSquare = null;
-        }
-
-        function highlightValidChessMoves(row, col) {
-            const squares = document.querySelectorAll('.game-square');
-            squares.forEach((square, index) => {
-                const targetRow = 7 - Math.floor(index / 8);
-                const targetCol = index % 8;
-                if (isValidChessMove({row, col}, {row: targetRow, col: targetCol})) {
-                    square.classList.add('valid-move');
-                }
-            });
-        }
-
-        function isValidChessMove(from, to) {
-            const piece = gameState.board[from.row][from.col];
-            const target = gameState.board[to.row][to.col];
-            
-            if (!piece) return false;
-            if (target && target.color === piece.color) return false;
-            if (from.row === to.row && from.col === to.col) return false;
-            
-            return isValidPieceMove(piece.piece, from, to, piece.color);
-        }
-
-        function isValidPieceMove(pieceType, from, to, color) {
-            const rowDiff = to.row - from.row;
-            const colDiff = to.col - from.col;
-            const rowDiffAbs = Math.abs(rowDiff);
-            const colDiffAbs = Math.abs(colDiff);
-            
-            switch (pieceType) {
-                case '♙': // White pawn
-                    if (colDiffAbs === 0) {
-                        if (from.row === 6 && to.row === 4 && !gameState.board[to.row][to.col]) return true;
-                        if (rowDiff === -1 && !gameState.board[to.row][to.col]) return true;
-                    }
-                    if (colDiffAbs === 1 && rowDiff === -1 && gameState.board[to.row][to.col]) return true;
-                    return false;
-                    
-                case '♟': // Black pawn
-                    if (colDiffAbs === 0) {
-                        if (from.row === 1 && to.row === 3 && !gameState.board[to.row][to.col]) return true;
-                        if (rowDiff === 1 && !gameState.board[to.row][to.col]) return true;
-                    }
-                    if (colDiffAbs === 1 && rowDiff === 1 && gameState.board[to.row][to.col]) return true;
-                    return false;
-                    
-                case '♖': case '♜': // Rook
-                    return (rowDiffAbs === 0 || colDiffAbs === 0) && isChessPathClear(from, to);
-                    
-                case '♗': case '♝': // Bishop
-                    return rowDiffAbs === colDiffAbs && isChessPathClear(from, to);
-                    
-                case '♕': case '♛': // Queen
-                    return (rowDiffAbs === 0 || colDiffAbs === 0 || rowDiffAbs === colDiffAbs) && isChessPathClear(from, to);
-                    
-                case '♔': case '♚': // King
-                    return rowDiffAbs <= 1 && colDiffAbs <= 1;
-                    
-                case '♘': case '♞': // Knight
-                    return (rowDiffAbs === 2 && colDiffAbs === 1) || (rowDiffAbs === 1 && colDiffAbs === 2);
-                    
-                default:
-                    return false;
-            }
-        }
-
-        function isChessPathClear(from, to) {
-            const rowStep = Math.sign(to.row - from.row);
-            const colStep = Math.sign(to.col - from.col);
-            let currentRow = from.row + rowStep;
-            let currentCol = from.col + colStep;
-            
-            while (currentRow !== to.row || currentCol !== to.col) {
-                if (gameState.board[currentRow][currentCol]) return false;
-                currentRow += rowStep;
-                currentCol += colStep;
-            }
-            return true;
-        }
-
-        function makeChessMove(from, to) {
-            const piece = gameState.board[from.row][from.col];
-            const captured = gameState.board[to.row][to.col];
-            
-            gameState.board[to.row][to.col] = piece;
-            gameState.board[from.row][from.col] = null;
-            
-            gameStats.moves++;
-            updateStatsDisplay();
-            
-            // Check for king capture (simplified checkmate)
-            if (captured && (captured.piece === '♔' || captured.piece === '♚')) {
-                gameState.gameOver = true;
-                gameState.winner = gameState.currentPlayer;
-                showChessGameEnd();
-                return;
-            }
-            
-            gameState.currentPlayer = gameState.currentPlayer === 'white' ? 'black' : 'white';
-            renderChessBoard();
-        }
-
-        function makeComputerMove() {
-            if (gameState.gameOver) return;
-            
-            const moves = getAllValidChessMoves('black');
-            if (moves.length === 0) {
-                gameState.gameOver = true;
-                gameState.winner = 'white';
-                showChessGameEnd();
-                return;
-            }
-            
-            let bestMove = moves[0];
-            
-            // Simple AI based on difficulty
-            switch (gameState.difficulty) {
-                case 'beginner':
-                    bestMove = moves[Math.floor(Math.random() * moves.length)];
-                    break;
-                case 'easy':
-                case 'medium':
-                case 'hard':
-                case 'master':
-                    bestMove = getBestChessMove(moves);
-                    break;
-                default:
-                    bestMove = moves[Math.floor(Math.random() * moves.length)];
-            }
-            
-            makeChessMove(bestMove.from, bestMove.to);
-        }
-
-        function getAllValidChessMoves(color) {
-            const moves = [];
-            for (let row = 0; row < 8; row++) {
-                for (let col = 0; col < 8; col++) {
-                    const piece = gameState.board[row][col];
-                    if (piece && piece.color === color) {
-                        for (let toRow = 0; toRow < 8; toRow++) {
-                            for (let toCol = 0; toCol < 8; toCol++) {
-                                if (isValidChessMove({row, col}, {row: toRow, col: toCol})) {
-                                    moves.push({from: {row, col}, to: {row: toRow, col: toCol}});
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return moves;
-        }
-
-        function getBestChessMove(moves) {
-            let bestMove = moves[0];
-            let bestScore = -Infinity;
-            
-            moves.forEach(move => {
-                let score = 0;
-                const target = gameState.board[move.to.row][move.to.col];
-                
-                // Prioritize captures
-                if (target) {
-                    const pieceValues = {'♙':1,'♟':1,'♘':3,'♞':3,'♗':3,'♝':3,'♖':5,'♜':5,'♕':9,'♛':9,'♔':100,'♚':100};
-                    score += pieceValues[target.piece] || 0;
-                }
-                
-                // Center control
-                if (move.to.row >= 3 && move.to.row <= 4 && move.to.col >= 3 && move.to.col <= 4) {
-                    score += 2;
-                }
-                
-                // Random factor
-                score += Math.random() * 0.5;
-                
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestMove = move;
-                }
-            });
-            
-            return bestMove;
-        }
-
-        function showChessGameEnd() {
-            stopTimer();
-            if (gameState.winner === 'white') {
-                gameStats.score += 100;
-                updateStatsDisplay();
-                document.getElementById('successMessage').classList.add('show');
-                showAchievement('Chess Champion!', 'You defeated the computer!');
-                showCelebration('🏆 Victory! You won the chess game!');
-            } else {
-                showCelebration('💀 Game Over! Computer wins this time. Try again!');
-            }
-        }
-
-        function resetPlayerVsComputer() {
-            gameState = {
-                board: createInitialChessBoard(),
-                currentPlayer: 'white',
-                selectedSquare: null,
-                gameOver: false,
-                winner: null,
-                difficulty: gameState.difficulty || 'beginner'
-            };
-            
-            renderChessBoard();
-            document.getElementById('successMessage').classList.remove('show');
-        }
-
-        // Other games implementations (capture race, pawn race, memory match)
-        // ... [keeping existing implementations] ...
-
-        // Common game functions
-        function resetGame() {
-            if (!currentGame) return;
-            
-            stopTimer();
-            resetGameStats();
-            games[currentGame].reset();
-            startTimer();
-            showCelebration('🔄 Game reset! Good luck!');
-        }
-
-        function showCelebration(message) {
-            const celebration = document.getElementById('celebration');
-            celebration.textContent = message;
-            celebration.classList.add('show');
-            
-            setTimeout(() => {
-                celebration.classList.remove('show');
-            }, 3000);
-        }
-
-        function showAchievement(title, description) {
-            const popup = document.getElementById('achievementPopup');
-            document.getElementById('achievementTitle').textContent = title;
-            document.getElementById('achievementDescription').textContent = description;
-            popup.classList.add('show');
-        }
-
-        function closeAchievement() {
-            document.getElementById('achievementPopup').classList.remove('show');
-        }
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            resetGameStats();
-        });
-    </script>
-</body>
-</html>
+            // Show elements based on game
+            if (gameId === 'piece-placement') {
+                document.getElementById('pieceSelector').style.display =
