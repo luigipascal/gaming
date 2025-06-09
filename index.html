@@ -181,6 +181,29 @@
   calculateProgress();
 </script>
 <script src="progress.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  calculateProgress();
+});
 
+function calculateProgress() {
+  const keys = [
+    "visited_basics",
+    "visited_board", 
+    "visited_pieces",
+    "visited_moves",
+    "visited_quiz",
+    "visited_games"
+  ];
+
+  let score = keys.reduce((acc, key) => {
+    return acc + (localStorage.getItem(key) === "true" ? 1 : 0);
+  }, 0);
+
+  let percent = Math.round((score / keys.length) * 100);
+  document.getElementById("progressFill").style.width = percent + "%";
+  document.getElementById("progressPercent").textContent = percent + "%";
+}
+</script>
 </body>
 </html>
